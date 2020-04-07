@@ -22,6 +22,15 @@
 
 %end
 
+%hook ExploreMixedListView
+//普通版置顶新闻
+- (id)initWithFrame:(struct CGRect)arg1 topInset:(double)arg2 bottomInset:(double)arg3
+{
+     return %orig(arg1,arg2,0);
+}
+	
+%end
+
 %hook TTFeedPureTitleController
 //
 - (id)buidFeedItemsLayoutWithOrderedData:(id)arg1
@@ -37,13 +46,14 @@
 {
      return 0;
 }
-- (void)refreshNewStyleFrame{};
+- (void)refreshNewStyleFrame{}
 
 %end
 
 %hook TTAuthorizeHintView
 //首页悬浮视图
-- (void)show{};
+- (void)show{}
+
 %end
 
 %hook TTPaidCircleItem
@@ -53,13 +63,14 @@
      arg1 = 0;
      return 0;
 }
+
 %end
 
 %hook TTVVideoDetailRelatedVideoViewController
 //相关视频
 - (void)setAllRelatedItems:(id)allRelatedItems{};
-%end
 
+%end
 
 %hook TTVVideoDetailNatantInfoView
 //缩小分享区
@@ -69,17 +80,8 @@
 }
 %end
 
-%hook ExploreMixedListView
-//普通版置顶新闻
-- (id)initWithFrame:(struct CGRect)arg1 topInset:(double)arg2 bottomInset:(double)arg3
-{
-     return %orig(arg1,arg2,0);
-}
-	
-%end
-
-
 %hook NSURL
+//相关搜索
 + (id)URLWithString:(NSString *)URLString
 {
      if([URLString containsString:@"https://is.snssdk.com/2/article/information/v23"]
