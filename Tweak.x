@@ -44,7 +44,8 @@
 //相关文章
 - (id)initWithWidth:(double)arg1
 {
-     return 0;
+     arg1 = 0;
+     return %orig;
 }
 - (void)refreshNewStyleFrame{}
 
