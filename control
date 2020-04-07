@@ -1,0 +1,9 @@
+Package: com.paigu.toutiao
+Name: 清爽今日头条
+Depends: mobilesubstrate
+Version: 1.1.0
+Architecture: iphoneos-arm
+Description: (修复首次点开视频不显示详情的问题。)去掉头条专业版和普通版的流量提醒、置顶新闻、文章下的相关搜索；去掉专业版文章下的相关文章、圈子；去掉专业版视频下的相关视频。
+Maintainer: 糖醋丶炒排骨
+Author: 糖醋丶炒排骨
+Section: Tweaks

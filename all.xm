@@ -1,0 +1,348 @@
+%hook TTArticleDetailViewController
++ (_Bool)checkWebContentBlank:(id)arg1 withBlankColor:(id)arg2 { %log; _Bool r = %orig;   return r; }
+- (void)setHasConfigLeftSlideToPersonal:(_Bool )hasConfigLeftSlideToPersonal { %log; %orig; }
+- (_Bool )hasConfigLeftSlideToPersonal { %log; _Bool  r = %orig;   return r; }
+- (void)setRewardView:(id)rewardView { %log; %orig; }
+- (id)rewardView { %log; return %orig; }
+- (void)setLastFollowState:(_Bool )lastFollowState { %log; %orig; }
+- (_Bool )lastFollowState { %log; _Bool  r = %orig;   return r; }
+- (void)setFansCount:(long long )fansCount { %log; %orig; }
+- (long long )fansCount { %log; long long  r = %orig;   return r; }
+- (void)setAddObserveArticle:(id)addObserveArticle { %log; %orig; }
+- (id)addObserveArticle { %log; return %orig; }
+- (void)setRelateReadFeedCommentViewController:(id)relateReadFeedCommentViewController { %log; %orig; }
+- (id)relateReadFeedCommentViewController { %log; return %orig;}
+- (void)setRelateReadFeedViewController:(id)relateReadFeedViewController { %log; %orig; }
+- (id)relateReadFeedViewController { %log; return %orig; }
+- (void)setLogoDownloadFinished:(_Bool )logoDownloadFinished { %log; %orig; }
+- (_Bool )logoDownloadFinished { %log; _Bool  r = %orig;   return r; }
+- (void)setIsTitleImageDataValid:(_Bool )isTitleImageDataValid { %log; %orig; }
+- (_Bool )isTitleImageDataValid { %log; _Bool  r = %orig;   return r; }
+- (void)setMemoryOnViewWillAppear:(double )memoryOnViewWillAppear { %log; %orig; }
+- (double )memoryOnViewWillAppear { %log; double  r = %orig;   return r; }
+- (void)setHasTrackRedPacketShowEvent:(_Bool )hasTrackRedPacketShowEvent { %log; %orig; }
+- (_Bool )hasTrackRedPacketShowEvent { %log; _Bool  r = %orig;   return r; }
+- (void)setWillGoBackFromNav:(_Bool )willGoBackFromNav { %log; %orig; }
+- (_Bool )willGoBackFromNav { %log; _Bool  r = %orig;   return r; }
+- (void)setParentPageCategoryID:(NSString *)parentPageCategoryID { %log; %orig; }
+- (NSString *)parentPageCategoryID { %log; NSString * r = %orig;   return r; }
+- (void)setShowTipsViewWillAppearChecked:(_Bool )showTipsViewWillAppearChecked { %log; %orig; }
+- (_Bool )showTipsViewWillAppearChecked { %log; _Bool  r = %orig;   return r; }
+- (void)setShowTipsOnNavBarChecked:(_Bool )showTipsOnNavBarChecked { %log; %orig; }
+- (_Bool )showTipsOnNavBarChecked { %log; _Bool  r = %orig;   return r; }
+- (void)setShouldShowTipsOnNavBar:(_Bool )shouldShowTipsOnNavBar { %log; %orig; }
+- (_Bool )shouldShowTipsOnNavBar { %log; _Bool  r = %orig;   return r; }
+- (void)setBeginShowComment:(_Bool )beginShowComment { %log; %orig; }
+- (_Bool )beginShowComment { %log; _Bool  r = %orig;   return r; }
+- (void)setDetailMenuController:(id)detailMenuController { %log; %orig; }
+- (id)detailMenuController { %log; return %orig;}
+- (void)setHasReload:(_Bool )hasReload { %log; %orig; }
+- (_Bool )hasReload { %log; _Bool  r = %orig;   return r; }
+- (void)setWasTitleViewShowed:(_Bool )wasTitleViewShowed { %log; %orig; }
+- (_Bool )wasTitleViewShowed { %log; _Bool  r = %orig;   return r; }
+- (void)setIsAppearing:(_Bool )isAppearing { %log; %orig; }
+- (_Bool )isAppearing { %log; _Bool  r = %orig;   return r; }
+- (void)setHasDidAppeared:(_Bool )hasDidAppeared { %log; %orig; }
+- (_Bool )hasDidAppeared { %log; _Bool  r = %orig;   return r; }
+- (void)setDetailKVOHasAdd:(_Bool )detailKVOHasAdd { %log; %orig; }
+- (_Bool )detailKVOHasAdd { %log; _Bool  r = %orig;   return r; }
+- (void)setEnterHalfFooterStatusContentOffset:(double )enterHalfFooterStatusContentOffset { %log; %orig; }
+- (double )enterHalfFooterStatusContentOffset { %log; double  r = %orig;   return r; }
+- (void)setNovelManager:(id)novelManager { %log; %orig; }
+- (id)novelManager { %log; return %orig; }
+- (void)setNatantViewModel:(id)natantViewModel { %log; %orig; }
+- (id)natantViewModel { %log; return %orig;}
+- (void)setStoryToolView:(id)storyToolView { %log; %orig; }
+- (id)storyToolView { %log; return %orig;}
+- (void)setRightFollowButton:(id)rightFollowButton { %log; %orig; }
+- (id)rightFollowButton { %log; return %orig;}
+- (void)setSearchBarButtonItemView:(id)searchBarButtonItemView { %log; %orig; }
+- (id)searchBarButtonItemView { %log; return %orig;}
+- (void)setRightBarButtonItemView:(id)rightBarButtonItemView { %log; %orig; }
+- (id)rightBarButtonItemView { %log; return %orig;}
+- (void)setBackButtonView:(id)backButtonView { %log; %orig; }
+- (id)backButtonView { %log; return %orig;}
+- (void)setNatantContainerView:(id)natantContainerView { %log; %orig; }
+- (id)natantContainerView { %log; return %orig;}
+- (void)setCommentWriteView:(id)commentWriteView { %log; %orig; }
+- (id)commentWriteView { %log; return %orig;}
+- (void)setTitleView:(id)titleView { %log; %orig; }
+- (id)titleView { %log; return %orig; }
+- (void)setLogoTitleView:(id)logoTitleView { %log; %orig; }
+- (id)logoTitleView { %log; return %orig;}
+- (void)setCommentViewController:(id)commentViewController { %log; %orig; }
+
+
+- (void)setTrendingWordsShowFlagArray:(NSMutableArray *)trendingWordsShowFlagArray { %log; %orig; }
+- (NSMutableArray *)trendingWordsShowFlagArray { %log; NSMutableArray * r = %orig;   return r; }
+- (void)setToolbarView:(id)toolbarView { %log; %orig; }
+- (id)toolbarView { %log; return %orig; }
+- (void)setItemActionManager:(id)itemActionManager { %log; %orig; }
+- (id)itemActionManager { %log; return %orig; }
+- (void)setArticleInfoManager:(id)articleInfoManager { %log; %orig; }
+- (id)articleInfoManager { %log; return %orig;}
+- (void)setDetailView:(id)detailView { %log; %orig; }
+- (id)detailView { %log; return %orig;}
+- (void)setDetailModel:(id)detailModel { %log; %orig; }
+- (id)detailModel { %log; return %orig;}
+- (void)setDelegate:(id)delegate { %log; %orig; }
+
+- (void)setDataSource:(id)dataSource { %log; %orig; }
+
+- (void)setRightBarButtons:(NSArray *)rightBarButtons { %log; %orig; }
+- (NSArray *)rightBarButtons { %log; NSArray * r = %orig;   return r; }
+- (void)setLeftBarButton:(UIView *)leftBarButton { %log; %orig; }
+- (UIView *)leftBarButton { %log; UIView * r = %orig;   return r; }
+- (void)setShouldShowNavigationBar:(_Bool )shouldShowNavigationBar { %log; %orig; }
+- (_Bool )shouldShowNavigationBar { %log; _Bool  r = %orig;   return r; }
+
+- (void)checkBlankWebView { %log; %orig; }
+- (void)artilceTagBuryForShortArticleDetail { %log; %orig; }
+- (void)articleTagBuryForArticleDetailWithScrollview:(id)arg1 { %log; %orig; }
+- (void)initTrendingWordsShowFlagArray { %log; %orig; }
+- (void)trackTrendingWordsShowEventAtIndex:(unsigned long long)arg1 withTag:(id)arg2 { %log; %orig; }
+- (void)trackTrendingShowEvent { %log; %orig; }
+- (void)viewSafeAreaInsetsDidChange { %log; %orig; }
+- (id)suitableFinishBackView { %log; id r = %orig;   return r; }
+- (void)formBannerTextFieldEdit:(id)arg1 { %log; %orig; }
+- (void)keyboardDidHide { %log; %orig; }
+- (id)animationFromView { %log; id r = %orig;   return r; }
+- (_Bool)tt_hasValidateData { %log; _Bool r = %orig;   return r; }
+- (void)commentFinishNotification:(id)arg1 { %log; %orig; }
+- (void)commentSendingNotification:(id)arg1 { %log; %orig; }
+- (void)didDismissModalContainerController:(id)arg1 { %log; %orig; }
+- (id)tt_RelateReadHeaderView { %log; id r = %orig;   return r; }
+- (void)ttPhotoNewCommentViewControllerBanEmojiInput:(_Bool)arg1 { %log; %orig; }
+- (void)ttPhotoNewCommentViewControllerDisappear:(id)arg1 { %log; %orig; }
+- (void)ttPhotoNewCommentViewControllerAppear:(id)arg1 { %log; %orig; }
+- (void)tt_commentViewControllerDidScrollToCommentRegion:(id)arg1 { %log; %orig; }
+- (void)tt_commentViewController:(id)arg1 refreshCommentCount:(int)arg2 { %log; %orig; }
+- (void)tt_commentViewController:(id)arg1 didSelectWithInfo:(id)arg2 { %log; %orig; }
+- (void)tt_commentViewController:(id)arg1 scrollViewDidScroll:(id)arg2 { %log; %orig; }
+- (void)tt_commentViewController:(id)arg1 startWriteComment:(id)arg2 { %log; %orig; }
+- (void)tt_commentViewController:(id)arg1 didClickReplyButtonWithCommentModel:(id)arg2 { %log; %orig; }
+- (void)tt_commentViewController:(id)arg1 didClickCommentCellWithCommentModel:(id)arg2 { %log; %orig; }
+- (void)tt_commentViewController:(id)arg1 digCommentWithCommentModel:(id)arg2 { %log; %orig; }
+- (void)tt_commentViewControllerDidFetchCommentsWithError:(id)arg1 { %log; %orig; }
+- (_Bool)tt_canDeleteComments { %log; _Bool r = %orig;   return r; }
+- (long long)tt_zzComments { %log; long long r = %orig;   return r; }
+- (id)tt_groupModel { %log; id r = %orig;   return r; }
+- (id)tt_commentHeaderView { %log; id r = %orig;   return r; }
+- (void)tt_loadCommentsForMode:(long long)arg1 possibleLoadMoreOffset:(id)arg2 isFold:(_Bool)arg3 finishBlock:(id)arg4 { %log; %orig; }
+- (_Bool)isFromMessage { %log; _Bool r = %orig;   return r; }
+- (id)getLogPb { %log; id r = %orig;   return r; }
+- (id)getCatagoryID { %log; id r = %orig;   return r; }
+- (id)getCurrentArticle { %log; id r = %orig;   return r; }
+- (void)tt_articleDetailViewWillShowActionSheet:(id)arg1 { %log; %orig; }
+- (void)configLeftSlideToPersonalHomeIfNeeded { %log; %orig; }
+- (void)webView:(id)arg1 didFailLoadWithError:(id)arg2 { %log; %orig; }
+- (void)webViewDidFinishLoad:(id)arg1 { %log; %orig; }
+- (void)webView:(id)arg1 scrollViewDidEndDragging:(id)arg2 willDecelerate:(_Bool)arg3 { %log; %orig; }
+- (void)webView:(id)arg1 scrollViewDidScroll:(id)arg2 { %log; %orig; }
+- (void)tt_articleApplicationStautsBarDidRotate { %log; %orig; }
+- (void)tt_articleDetailViewDidChangeFontSize { %log; %orig; }
+- (void)tt_articleDetailViewWillChangeFontSize { %log; %orig; }
+- (void)tt_articleDetailViewWillCloseFooter { %log; %orig; }
+- (void)tt_articleDetailViewFooterHalfStatusOffset:(double)arg1 { %log; %orig; }
+- (void)tt_articleDetailViewWillShowFirstCommentCell { %log; %orig; }
+- (void)tt_articleDetailViewDidDomReady { %log; %orig; }
+- (void)p_sendLogoViewEventWithEventName:(id)arg1 { %log; %orig; }
+- (void)p_sendDetailLogicTrackForEvent:(id)arg1 { %log; %orig; }
+- (id)commentTrackDictionary { %log; id r = %orig;   return r; }
+- (void)p_sendCommentWriteTrack { %log; %orig; }
+- (void)p_sendFinishContentTrack { %log; %orig; }
+- (void)p_sendReadContentTrack { %log; %orig; }
+- (void)p_sendFinishCommentTrack { %log; %orig; }
+- (void)p_sendEnterCommentTrack { %log; %orig; }
+- (void)p_sendDetailLoadTimeOffLeaveTrack { %log; %orig; }
+- (void)p_sendDetailDeallocTrack { %log; %orig; }
+- (void)p_sendGoDetailTrack { %log; %orig; }
+- (void)p_sendNatantViewVisableTrack { %log; %orig; }
+- (void)sendCommentListShowTimeTrack { %log; %orig; }
+- (void)endCommentListShowTime { %log; %orig; }
+- (void)beginCommentListShowTime { %log; %orig; }
+- (struct CGRect)detailViewFrame { %log; struct CGRect r = %orig; return r; }
+- (_Bool)shouldShowErrorPageInDetailContaierViewController:(id)arg1 { %log; _Bool r = %orig;   return r; }
+- (void)detailContainerViewController:(id)arg1 rightBarButtonClicked:(id)arg2 { %log; %orig; }
+- (void)leftBarButtonClicked:(id)arg1 { %log; %orig; }
+- (void)onAccountLogin { %log; %orig; }
+- (void)observeValueForKeyPath:(id)arg1 ofObject:(id)arg2 change:(id)arg3 context:(void *)arg4 { %log; %orig; }
+- (void)p_paidNovelPurchasedFinished:(id)arg1 { %log; %orig; }
+- (void)pn_userDidTakeScreenshot:(id)arg1 { %log; %orig; }
+- (void)pn_applicationWillEnterForeground:(id)arg1 { %log; %orig; }
+- (void)pn_applicationDidEnterBackground:(id)arg1 { %log; %orig; }
+- (void)pn_statusBarOrientationDidChange { %log; %orig; }
+- (void)p_closeNatantView { %log; %orig; }
+- (void)p_openNatantView { %log; %orig; }
+- (_Bool)p_isNewsDetailForImageSubject { %log; _Bool r = %orig;   return r; }
+- (void)p_presentCommentViewController:(id)arg1 withCommentShowTye:(long long)arg2 { %log; %orig; }
+- (void)p_presentCommentViewController { %log; %orig; }
+- (void)p_willOpenWriteCommentViewWithReservedText:(id)arg1 switchToEmojiInput:(_Bool)arg2 { %log; %orig; }
+- (void)p_markIsScrollingTriggeredByCommentButtonClicked { %log; %orig; }
+- (void)p_trackDiggEvent { %log; %orig; }
+- (void)p_digg { %log; %orig; }
+- (void)p_showComment { %log; %orig; }
+- (void)p_writeCommentWithEmoji:(_Bool)arg1 { %log; %orig; }
+- (void)ttDetailToolbar:(id)arg1 clickWithType:(long long)arg2 { %log; %orig; }
+- (void)searchBtnClick { %log; %orig; }
+- (void)onLogoTitleViewClick { %log; %orig; }
+- (void)changeRewardViewDiggButtonBorderColorWithSelectStatus:(_Bool)arg1 { %log; %orig; }
+- (void)p_setupNatantRewardViewDiggAlterButton { %log; %orig; }
+- (void)p_setupToolBarDiggAlterButton { %log; %orig; }
+- (void)p_trackShareBtnEnhance { %log; %orig; }
+- (void)p_handleToolbarEnhanceShare { %log; %orig; }
+- (void)fetchPaidNovelIfNeed { %log; %orig; }
+- (void)p_reloadItems { %log; %orig; }
+- (void)p_reloadItemsWithInforManager:(id)arg1 { %log; %orig; }
+- (id)p_generateBarButtonWithImageName:(id)arg1 { %log; id r = %orig;   return r; }
+- (void)p_popToLastCorrectController { %log; %orig; }
+- (void)p_removeDetailViewKVO { %log; %orig; }
+- (void)p_removeContainerScrollViewObserver { %log; %orig; }
+- (void)p_fixBeginCommentOffset { %log; %orig; }
+- (void)p_addContainerScrollViewObserver { %log; %orig; }
+- (void)p_addDetailViewKVO { %log; %orig; }
+- (void)p_unregisterPreloadWKScheme { %log; %orig; }
+- (void)p_registerPreloadWKScheme { %log; %orig; }
+- (void)p_addObservers { %log; %orig; }
+- (struct CGRect)p_contentVisableRect { %log; struct CGRect r = %orig; return r; }
+- (struct CGRect)p_frameForToolBarView { %log; struct CGRect r = %orig; return r; }
+- (struct CGRect)p_frameForDetailView { %log; struct CGRect r = %orig; return r; }
+- (_Bool)p_needShowToolBarView { %log; _Bool r = %orig;   return r; }
+- (void)p_setDetailViewBars { %log; %orig; }
+- (void)p_refreshArticleTypeRelevantUIIfNeeded { %log; %orig; }
+- (void)p_refreshToolbarView { %log; %orig; }
+- (void)p_scrollToCommentIfNeeded { %log; %orig; }
+- (_Bool)p_natantValidContentViewFromArray:(id)arg1 { %log; _Bool r = %orig;   return r; }
+- (id)p_natantSpacingItemForClass:(id)arg1 { %log; id r = %orig;   return r; }
+- (void)removeNatantView:(id)arg1 animated:(_Bool)arg2 { %log; %orig; }
+- (id)p_newItemsBuildInNatantWithInfoManager:(id)arg1 { %log; id r = %orig;   return r; }
+- (void)p_deleteArticleByInfoFetchedIfNeeded { %log; %orig; }
+- (void)showGuideAmountView:(id)arg1 { %log; %orig; }
+- (void)p_startLoadArticleInfo { %log; %orig; }
+- (void)p_buildFootRelateReadFeedViewController { %log; %orig; }
+- (void)p_buildNatantView { %log; %orig; }
+- (void)p_buildCommentViewController { %log; %orig; }
+- (void)p_buildToolbarViewIfNeeded { %log; %orig; }
+- (void)p_triggerStoryToolViewAnimation:(_Bool)arg1 { %log; %orig; }
+- (void)p_updateFollowAndSearchButtons:(_Bool)arg1 { %log; %orig; }
+- (void)p_showTitle:(_Bool)arg1 { %log; %orig; }
+- (void)p_updateNavigationTitleViewWithScrollViewContentOffset:(double)arg1 { %log; %orig; }
+- (void)blockNotification:(id)arg1 { %log; %orig; }
+- (void)p_updateTopSubscribe:(id)arg1 { %log; %orig; }
+- (void)p_updateRightFollowButton { %log; %orig; }
+- (void)p_hideTitleView { %log; %orig; }
+- (void)p_updateNavigationTitleView { %log; %orig; }
+- (void)p_updateNavigationTitleViewInfo { %log; %orig; }
+- (void)p_updateStoryToolViewWithOffset:(double)arg1 { %log; %orig; }
+- (void)didMoveToParentViewController:(id)arg1 { %log; %orig; }
+- (void)p_cleanArticleDetailViewControllersInNavIfNeed { %log; %orig; }
+- (double)frameSizeWithSize:(double)arg1 { %log; double r = %orig;   return r; }
+- (void)p_buildNaviBar { %log; %orig; }
+- (void)p_buildTitleView { %log; %orig; }
+- (void)p_showLogoView { %log; %orig; }
+- (void)p_loadLogoTitleImage:(id)arg1 { %log; %orig; }
+- (void)p_buildLogoTitleView { %log; %orig; }
+- (void)p_buildStoryToolView { %log; %orig; }
+- (void)p_buildDetailNatant { %log; %orig; }
+- (void)p_buildDetailView { %log; %orig; }
+- (void)p_buildViews { %log; %orig; }
+- (void)themeChanged:(id)arg1 { %log; %orig; }
+- (void)p_refreshLogoView { %log; %orig; }
+- (void)sendReadedArticleNotification { %log; %orig; }
+- (void)_searchSelectionText:(id)arg1 { %log; %orig; }
+- (void)searchSelectionText:(id)arg1 { %log; %orig; }
+- (void)getSelectedText:(id)arg1 { %log; %orig; }
+- (void)selectedTypos:(id)arg1 { %log; %orig; }
+- (_Bool)canPerformAction:(SEL)arg1 withSender:(id)arg2 { %log; _Bool r = %orig;   return r; }
+- (void)menControllerDidShow { %log; %orig; }
+- (void)p_setupMenuItems { %log; %orig; }
+- (void)viewDidLayoutSubviews { %log; %orig; }
+- (void)viewDidDisappear:(_Bool)arg1 { %log; %orig; }
+- (void)viewWillDisappear:(_Bool)arg1 { %log; %orig; }
+- (void)viewDidAppear:(_Bool)arg1 { %log; %orig; }
+- (void)viewWillAppear:(_Bool)arg1 { %log; %orig; }
+- (void)receiveShowRemoteReloadTipNotification:(id)arg1 { %log; %orig; }
+- (void)goBack { %log; %orig; }
+- (_Bool)isFromPushAndOtherApp { %log; _Bool r = %orig;   return r; }
+- (void)viewDidLoad { %log; %orig; }
+- (void)dealloc { %log; %orig; }
+- (void)detailContainerViewController:(id)arg1 loadContentFailed:(id)arg2 { %log; %orig; }
+- (void)detailContainerViewController:(id)arg1 reloadData:(id)arg2 { %log; %orig; }
+- (id)initWithDetailViewModel:(id)arg1 { %log; id r = %orig;   return r; }
+- (void)setDislikeContainer:(id)dislikeContainer { %log; %orig; }
+- (id)dislikeContainer { %log; return %orig;}
+- (void)setActionSheetController:(id)actionSheetController { %log; %orig; }
+- (id)actionSheetController { %log; return %orig;}
+- (void)setDislikeDictionary:(NSDictionary *)dislikeDictionary { %log; %orig; }
+- (NSDictionary *)dislikeDictionary { %log; NSDictionary * r = %orig;   return r; }
+- (void)setShouldSentDislikeNotification:(_Bool )shouldSentDislikeNotification { %log; %orig; }
+- (_Bool )shouldSentDislikeNotification { %log; _Bool  r = %orig;   return r; }
+- (void)reportTyposAlertTrack { %log; %orig; }
+- (void)reportTyposTrack { %log; %orig; }
+- (void)tt_articleDetailViewTypos:(id)arg1 { %log; %orig; }
+- (void)tt_articleDetailViewWillShowDislike:(id)arg1 { %log; %orig; }
+- (void)report_showReportOnTopSharePannel { %log; %orig; }
+- (void)report_showReportOnSharePannel { %log; %orig; }
+- (void)report_showReportOnNatantView:(id)arg1 source:(long long)arg2 trackSource:(id)arg3 { %log; %orig; }
+- (void)report_dealloc { %log; %orig; }
+- (id)favouriteItem { %log; id r = %orig;   return r; }
+- (void)setFavouriteItem:(id)arg1 { %log; %orig; }
+- (void)setShareSourceType:(long long )shareSourceType { %log; %orig; }
+- (long long )shareSourceType { %log; long long  r = %orig;   return r; }
+- (id)shareManager { %log; id r = %orig;   return r; }
+- (void)setShareManager:(id)arg1 { %log; %orig; }
+- (id)advertisingItem { %log; id r = %orig;   return r; }
+- (id)reportItem { %log; id r = %orig;   return r; }
+- (id)fontSettingItem { %log; id r = %orig;   return r; }
+- (id)nightModeItem { %log; id r = %orig;   return r; }
+- (id)favItem { %log; id r = %orig;   return r; }
+- (id)copyItem { %log; id r = %orig;   return r; }
+- (id)systemShareItem { %log; id r = %orig;   return r; }
+- (id)dingdingItem { %log; id r = %orig;   return r; }
+- (id)qZoneItem { %log; id r = %orig;   return r; }
+- (id)qqItem { %log; id r = %orig;   return r; }
+- (id)pyqItem { %log; id r = %orig;   return r; }
+- (id)rocketItem { %log; id r = %orig;   return r; }
+- (id)wxItem { %log; id r = %orig;   return r; }
+- (id)weitoutiaoItem { %log; id r = %orig;   return r; }
+- (id)forwardItem { %log; id r = %orig;   return r; }
+- (id)defaultShareImage { %log; id r = %orig;   return r; }
+- (id)shareImageUrl { %log; id r = %orig;   return r; }
+- (id)shareImage { %log; id r = %orig;   return r; }
+- (id)shareDesc { %log; id r = %orig;   return r; }
+- (id)shareTitle { %log; id r = %orig;   return r; }
+- (id)systemShareURL { %log; id r = %orig;   return r; }
+- (id)commonShareURL { %log; id r = %orig;   return r; }
+- (id)tokenType { %log; id r = %orig;   return r; }
+- (id)shareType { %log; id r = %orig;   return r; }
+- (void)trackTokenShare:(id)arg1 activity:(id)arg2 { %log; %orig; }
+- (id)trackDict:(id)arg1 { %log; id r = %orig;   return r; }
+- (id)positionWithShareSourceType:(long long)arg1 { %log; id r = %orig;   return r; }
+- (id)shareTagWithShareSourceType:(long long)arg1 { %log; id r = %orig;   return r; }
+- (id)getTrackSharePlatform:(id)arg1 { %log; id r = %orig;   return r; }
+- (long long)getArticleShareType:(id)arg1 { %log; long long r = %orig;   return r; }
+- (long long)getShareType:(id)arg1 { %log; long long r = %orig;   return r; }
+- (void)shareManager:(id)arg1 tokenShareDialogDidShowWith:(id)arg2 { %log; %orig; }
+- (void)shareManager:(id)arg1 completedWith:(id)arg2 sharePanel:(id)arg3 error:(id)arg4 desc:(id)arg5 { %log; %orig; }
+- (void)shareManager:(id)arg1 clickedWith:(id)arg2 sharePanel:(id)arg3 { %log; %orig; }
+- (id)repostDisplayItems { %log; id r = %orig;   return r; }
+- (id)settingItems { %log; id r = %orig;   return r; }
+- (id)shareItems { %log; id r = %orig;   return r; }
+- (void)goodSentenceForward:(id)arg1 { %log; %orig; }
+- (void)p_forwardToWeitoutiao { %log; %orig; }
+- (id)repostParams { %log; id r = %orig;   return r; }
+- (void)actionSheet:(id)arg1 didDismissWithButtonIndex:(long long)arg2 { %log; %orig; }
+- (void)trackFavoriteEvent:(id)arg1 { %log; %orig; }
+- (void)didFavorWithDismissHandler:(id)arg1 { %log; %orig; }
+- (void)didChangeArticleFavoriteState { %log; %orig; }
+- (void)p_willChangeArticleFavoriteState { %log; %orig; }
+- (id)prepareShareImageIfNeeded { %log; id r = %orig;   return r; }
+- (id)createNonInterpolatedUIImageFormCIImage:(id)arg1 withSize:(double)arg2 { %log; id r = %orig;   return r; }
+- (void)shareToWechatWithActivityType:(long long)arg1 { %log; %orig; }
+- (void)trackShareEvent { %log; %orig; }
+- (void)p_willShowSharePannel { %log; %orig; }
+- (void)p_showMorePanel { %log; %orig; }
+- (NSString *)debugDescription { %log; NSString * r = %orig;   return r; }
+- (NSString *)description { %log; NSString * r = %orig;   return r; }
+- (unsigned long long )hash { %log; unsigned long long  r = %orig;   return r; }
+%end
