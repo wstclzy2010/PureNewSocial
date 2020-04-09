@@ -25,7 +25,7 @@
 //专业版置顶新闻
 + (double)heightForData:(id)arg1 cellWidth:(double)arg2 listType:(unsigned long long)arg3
 {	
-	return %orig(0,0,arg3);
+	return %orig(nil,0,arg3);
 }
 
 %end
@@ -43,7 +43,7 @@
 //相关文章
 - (id)initWithWidth:(double)arg1
 {
-    return 0;
+    return %orig(0);
 }
 - (void)refreshNewStyleFrame{};
 
@@ -51,7 +51,7 @@
 
 %hook TTAuthorizeHintView
 //首页悬浮视图
-- (void)show{};
+- (void)show{}
 %end
 
 %hook TTPaidCircleItem
@@ -65,7 +65,7 @@
 
 %hook TTVVideoDetailRelatedVideoViewController
 //相关视频
-- (void)setAllRelatedItems:(id)allRelatedItems{};
+- (void)setAllRelatedItems:(id)allRelatedItems{}
 %end
 
 
