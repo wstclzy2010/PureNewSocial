@@ -40,17 +40,17 @@
 %end
 
 %hook TTDetailNatantNewRelateReadView
-//相关文章
+//文章底部相关文章
 - (id)initWithWidth:(double)arg1
 {
     return %orig(0);
 }
-- (void)refreshNewStyleFrame{};
+- (void)refreshNewStyleFrame{}
 
 %end
 
 %hook TTAuthorizeHintView
-//首页悬浮视图
+//首页悬浮推广
 - (void)show{}
 %end
 
@@ -64,7 +64,7 @@
 %end
 
 %hook TTVVideoDetailRelatedVideoViewController
-//相关视频
+//视频下方相关视频
 - (void)setAllRelatedItems:(id)allRelatedItems{}
 %end
 
@@ -88,6 +88,7 @@
 
 
 %hook NSURL
+//文章底部相关搜索
 + (id)URLWithString:(NSString *)URLString
 {
 	if([URLString containsString:@"https://is.snssdk.com/2/article/information/v23"]
