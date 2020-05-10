@@ -1,5 +1,5 @@
 ARCHS = arm64 arm64e
-TARGET = iphone:latest:13.1
+TARGET = iphone:10.3
 
 include $(THEOS)/makefiles/common.mk
 
@@ -10,3 +10,5 @@ toutiaohook_FILES = Tweak.x
 toutiaohookU_FRAMEWORKS = UIKit Foundation
 
 include $(THEOS_MAKE_PATH)/tweak.mk
+SUBPROJECTS += toutiaopref
+include $(THEOS_MAKE_PATH)/aggregate.mk
