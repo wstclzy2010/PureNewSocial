@@ -21,6 +21,42 @@ static BOOL RecommendUser;
 static BOOL oldhotsearch;
 static BOOL hotsearch;
 
+static void loadPrefs()
+{
+	static NSString * file = @"/User/Library/Preferences/com.paigu.toutiaopref.plist";
+	NSMutableDictionary * preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:file];
+
+	if(!preferences)
+	{
+		preferences = [[NSMutableDictionary alloc] init];
+	}
+	else
+	{
+		PalyerTraffic = [[preferences objectForKey:@"PalyerTraffic"] boolValue];
+		Indicator = [[preferences objectForKey:@"Indicator"] boolValue];
+		topnewspro = [[preferences objectForKey:@"topnewspro"] boolValue];
+		RelateRead = [[preferences objectForKey:@"RelateRead"] boolValue];
+		AuthorizeHint = [[preferences objectForKey:@"AuthorizeHint"] boolValue];
+		PaidCircle = [[preferences objectForKey:@"PaidCircle"] boolValue];
+		RelatedVideo = [[preferences objectForKey:@"RelatedVideo"] boolValue];
+		ShareView = [[preferences objectForKey:@"ShareView"] boolValue];
+		topnews = [[preferences objectForKey:@"topnews"] boolValue];
+		ArticleURL = [[preferences objectForKey:@"ArticleURL"] boolValue];
+		HotBoard = [[preferences objectForKey:@"HotBoard"] boolValue];
+		RecommendUser = [[preferences objectForKey:@"RecommendUser"] boolValue];
+		oldhotsearch = [[preferences objectForKey:@"oldhotsearch"] boolValue];
+		hotsearch = [[preferences objectForKey:@"hotsearch"] boolValue];
+	}
+	[preferences release];
+}
+	
+static NSString *nsNotificationString = @"com.lacertosusrepo.safiprefs/preferences.changed";
+static void notificationCallback(CFNotificationCenterRef center, void *observer, 
+	CFStringRef name, const void *object, CFDictionaryRef userInfo)
+{
+	loadPrefs();
+}
+
 %hook TTVPalyerTrafficAlert
 //视频流量提醒
 - (bool)shouldShow
@@ -263,42 +299,6 @@ static BOOL hotsearch;
 %end
 
 
-static void loadPrefs()
-{
-	static NSString * file = @"/User/Library/Preferences/com.paigu.toutiaopref.plist";
-	NSMutableDictionary * preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:file];
-
-	if(!preferences)
-	{
-		preferences = [[NSMutableDictionary alloc] init];
-	}
-	else
-	{
-		PalyerTraffic = [[preferences objectForKey:@"PalyerTraffic"] boolValue];
-		Indicator = [[preferences objectForKey:@"Indicator"] boolValue];
-		topnewspro = [[preferences objectForKey:@"topnewspro"] boolValue];
-		RelateRead = [[preferences objectForKey:@"RelateRead"] boolValue];
-		AuthorizeHint = [[preferences objectForKey:@"AuthorizeHint"] boolValue];
-		PaidCircle = [[preferences objectForKey:@"PaidCircle"] boolValue];
-		RelatedVideo = [[preferences objectForKey:@"RelatedVideo"] boolValue];
-		ShareView = [[preferences objectForKey:@"ShareView"] boolValue];
-		topnews = [[preferences objectForKey:@"topnews"] boolValue];
-		ArticleURL = [[preferences objectForKey:@"ArticleURL"] boolValue];
-		HotBoard = [[preferences objectForKey:@"HotBoard"] boolValue];
-		RecommendUser = [[preferences objectForKey:@"RecommendUser"] boolValue];
-		oldhotsearch = [[preferences objectForKey:@"oldhotsearch"] boolValue];
-		hotsearch = [[preferences objectForKey:@"hotsearch"] boolValue];
-	}
-	[preferences release];
-}
-	
-static NSString *nsNotificationString = @"com.lacertosusrepo.safiprefs/preferences.changed";
-static void notificationCallback(CFNotificationCenterRef center, void *observer, 
-	CFStringRef name, const void *object, CFDictionaryRef userInfo)
-{
-	loadPrefs();
-}
-
 %ctor {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	loadPrefs();
@@ -309,45 +309,7 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 
 	[pool release];
 }
-///////////////////////////////////////////////////测试开关
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
 
-// %hook SettingView
-
-// #define MJDefaults [NSUserDefaults standardUserDefaults]
-// #define MJAutoKey @"mj_auto_key"
-// // 一共有多少组
-// - (long long)numberOfSectionsInTableView:(id)arg1
-// {
-// 	return %orig+1;
-// }
-
-// - (long long)tableView:(id)arg1 numberOfRowsInSection:(long long)arg2
-// {
-// 	return %orig+2;
-// }
-
-// - (id)tableView:(id)arg1 cellForRowAtIndexPath:(id)arg2
-// {
-// 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-// 		reuseIdentifier:nil];
-
-	
-// }
-
-// %end
 
 
 
