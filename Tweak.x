@@ -50,7 +50,7 @@ static void loadPrefs()
 	[preferences release];
 }
 	
-static NSString *nsNotificationString = @"com.lacertosusrepo.safiprefs/preferences.changed";
+static NSString *nsNotificationString = @"com.paigu.toutiaopref/preferences.changed";
 static void notificationCallback(CFNotificationCenterRef center, void *observer, 
 	CFStringRef name, const void *object, CFDictionaryRef userInfo)
 {
@@ -299,7 +299,8 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 %end
 
 
-%ctor {
+%ctor
+{
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	loadPrefs();
 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
@@ -309,32 +310,3 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 
 	[pool release];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
