@@ -299,7 +299,8 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 %end
 
 
-%ctor {
+%ctor
+{
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	loadPrefs();
 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
@@ -309,32 +310,3 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 
 	[pool release];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
