@@ -50,7 +50,7 @@ static void loadPrefs()
 	[preferences release];
 }
 	
-static NSString *nsNotificationString = @"com.lacertosusrepo.safiprefs/preferences.changed";
+static NSString *nsNotificationString = @"com.paigu.toutiaopref/preferences.changed";
 static void notificationCallback(CFNotificationCenterRef center, void *observer, 
 	CFStringRef name, const void *object, CFDictionaryRef userInfo)
 {
