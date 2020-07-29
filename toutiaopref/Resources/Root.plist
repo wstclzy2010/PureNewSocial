@@ -161,7 +161,7 @@
 			<key>key</key>
 			<string>HotBoard</string>
 			<key>label</key>
-			<string>移除新版本首页热榜</string>
+			<string>移除新版本热榜热点</string>
 			<key>PostNotification</key>
 			<string>com.paigu.toutiaopref/preferences.changed</string>
 		</dict>
@@ -209,9 +209,51 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.paigu.toutiaopref</string>
+			<key>key</key>
+			<string>topBarLOT</string>
+			<key>label</key>
+			<string>移除节日和活动横幅</string>
+			<key>PostNotification</key>
+			<string>com.paigu.toutiaopref/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.paigu.toutiaopref</string>
+			<key>key</key>
+			<string>normalAd</string>
+			<key>label</key>
+			<string>去除普通版头条广告</string>
+			<key>PostNotification</key>
+			<string>com.paigu.toutiaopref/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.paigu.toutiaopref</string>
+			<key>key</key>
+			<string>Xigualive</string>
+			<key>label</key>
+			<string>去除首页的直播推荐</string>
+			<key>PostNotification</key>
+			<string>com.paigu.toutiaopref/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>一般注入到商店App的插件不需要注销即可生效。请在开启/关闭开关后点两次下方的按钮重新进入应用</string>
+			<string>注入到商店App的插件一般不需要注销即可生效，请在开启/关闭开关后点两次下方的按钮重新进入应用</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -234,10 +276,6 @@
 			<string>请我吃碗泡面</string>
 			<key>action</key>
 			<string>donateViaAlipay</string>
-			<!-- <key>hasIcon</key>
-			<true/>
-			<key>icon</key>
-			<string>alipay.png</string> -->
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -273,7 +311,7 @@
 			<key>label</key>
 			<string></string>
 			<key>footerText</key>
-			<string>Copyright (c) 2020 糖醋丶炒排骨. All rights reserved.</string>
+			<string>© 2020 Copyright 糖醋丶炒排骨. All rights reserved.</string>
 		</dict>
 	</array>
 	<key>title</key>
