@@ -54,7 +54,7 @@ appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 {
 	
 	if([appVersion isEqualToString:@"7.0.9"])
-		return %orig+1;
+		return %orig+1;        //首先%orig表示返回值，及long long类型的数量，在原来的数量上增加一组
 	
 	else
 		return %orig;
@@ -64,7 +64,7 @@ appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 {
 	if([appVersion isEqualToString:@"7.0.9"])
 	{
-		if(section == [self numberOfSectionsInTableView:tableView] - 1)
+		if(section == [self numberOfSectionsInTableView:tableView] - 1)  //假设有10，那么第10组的组号就是9
 			return 1;
 		else
 			return %orig;
@@ -82,7 +82,16 @@ appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 	
 		else
 		{
-			UITableViewCell *cell = %orig;
+			UITableViewCell *cell = %orig;  
+			/* 不要根据正向开发的写法重新创建cell，没必要而且可能会崩溃，直接%orig获取到它创建好的cell即可：
+			
+			static NSString *ID = @"cell";
+			UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+                        if(!cell)
+                               cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
+			
+			
+			*/
 
 			cell.textLabel.text = @"清爽今日头条";
 			cell.textLabel.font = [UIFont systemFontOfSize:16];
