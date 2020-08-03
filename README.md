@@ -1,7 +1,7 @@
 # iOS今日头条专业版净化(基于专业版7.0.9开发)
 ## 特性
 
----
+
 * 不依赖preferenceloader，插件设置项集成在应用内部
 * 移除置顶新闻
 * 移除首页悬浮推广
@@ -19,13 +19,11 @@
 
 ## 截图预览
 
----
 ![Alt text](https://github.com/wstclzy2010/PureNewSocial/blob/master/IMG_0373.PNG)
 ![Alt text](https://github.com/wstclzy2010/PureNewSocial/blob/master/IMG_0374.PNG)
 
 ## 设置项集成至应用内
 
----
 这个步骤其实没有什么特别值得说的，因为这完全就是正向的内容，我相信只要学过OC和iOS的开发的，对他们来说都是非常熟悉且简单的东西。我是没有学过iOS开发甚至是OC语言的，那么当我有这个需求的时候，我做了些什么呢？
 * 研究了半天，噢要在tableview上做文章，之后打开bilibili，搜索iOS开发，强行逼自己看了一天的tableview教程视频。
 * 有了最最最基本的知识后，还差点东西，因为让你用xcode做一个tableview界面出来，简单啊，拖个tableview出来，就那几个方法，写一写就好了。但这里是逆向，是改别人的界面，你拿什么拖？hook哪个类？什么方法？
@@ -151,8 +149,6 @@ appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 剩下的就是tableview一些必备方法了，就不再重复说了，你平时怎么写tableviewCell的现在也怎么写
 
 ## 退出应用
-
----
 
 因为我太菜，没有实现热开关，那么我采取的还是增加一个关闭应用的开关让用户关掉应用后重新进入才能生效。这里调用exit(0)会有一种崩溃的视觉效果，这是不好的，所以可以在调用退出前增加一个动画
 ```
