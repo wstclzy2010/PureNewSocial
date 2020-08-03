@@ -163,3 +163,43 @@ appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
     [UIView commitAnimations];
 }
 ```
+
+## 接收开关的bool值
+
+前面的开关我是保存在NSUserDefaults中的
+```
+#define QSDefaults [NSUserDefaults standardUserDefaults]
+
+UISwitch *switchView = [[UISwitch alloc] init];
+switchView.on = [QSDefaults boolForKey:@"Indicator"];
+[switchView addTarget:self action:@selector(qs_Indicator:) forControlEvents:UIControlEventValueChanged];
+cell.accessoryView = switchView;
+
+- (void)qs_Indicator:(UISwitch *)switchView
+{
+    [QSDefaults setBool:switchView.isOn forKey:@"Indicator"];
+    [QSDefaults synchronize];
+}
+```
+问题转变到，如何接收存储在standardUserDefaults的开关值，和普通的利用preferenceloader依赖写到设置中一样，我这里采取：
+```
+static BOOL Indicator;
+
+static void loadPrefs()
+{
+	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+	appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+	NSUserDefaults *QSSetting = [NSUserDefaults standardUserDefaults];
+	Indicator = [[QSSetting objectForKey:@"Indicator"] boolValue];
+	..........
+	..........
+}
+
+%ctor
+{
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+ 	loadPrefs();
+	[pool release];
+}
+```
+就是在启动应用的时候，读取开关的值
