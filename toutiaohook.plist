@@ -1,8 +1,0 @@
-{
-    Filter =     {
-        Bundles =         (
-            "com.ss.iphone.article.NewsSocial",
-            "com.ss.iphone.article.News"
-        );
-    };
-}
