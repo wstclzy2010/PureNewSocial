@@ -1,73 +1,6 @@
 #import "ViewController.h"
 
 
-
-// @interface SSThemedTableViewCell : UITableViewCell
-// @end
-
-// @class SSThemedTableViewCell;
-/*************************************preferenceLoader依赖代码*****************************/
-// NSMutableDictionary * preferences;
-
-// static BOOL PalyerTraffic;
-// static BOOL Indicator;
-// static BOOL topnews;
-// static BOOL RelateRead;
-// static BOOL AuthorizeHint;
-// static BOOL PaidCircle;
-// static BOOL RelatedVideo;
-// static BOOL ShareView;
-// static BOOL topnews;
-// static BOOL ArticleURL;
-// static BOOL HotBoard;
-// static BOOL RecommendUser;
-// static BOOL oldhotsearch;
-// static BOOL hotsearch;
-// static BOOL topBarLOT;
-// static BOOL normalAd;
-// static BOOL Xigualive;
-
-
-// static void loadPrefs()
-// {
-// 	static NSString * file = @"/User/Library/Preferences/com.paigu.toutiaopref.plist";
-// 	NSMutableDictionary * preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:file];
-
-// 	if(!preferences)
-// 	{
-// 		preferences = [[NSMutableDictionary alloc] init];
-// 	}
-// 	else
-// 	{
-// 		PalyerTraffic = [[preferences objectForKey:@"PalyerTraffic"] boolValue];
-// 		Indicator = [[preferences objectForKey:@"Indicator"] boolValue];
-// 		topnews = [[preferences objectForKey:@"topnews"] boolValue];
-// 		RelateRead = [[preferences objectForKey:@"RelateRead"] boolValue];
-// 		AuthorizeHint = [[preferences objectForKey:@"AuthorizeHint"] boolValue];
-// 		PaidCircle = [[preferences objectForKey:@"PaidCircle"] boolValue];
-// 		RelatedVideo = [[preferences objectForKey:@"RelatedVideo"] boolValue];
-// 		ShareView = [[preferences objectForKey:@"ShareView"] boolValue];
-// 		topnews = [[preferences objectForKey:@"topnews"] boolValue];
-// 		ArticleURL = [[preferences objectForKey:@"ArticleURL"] boolValue];
-// 		HotBoard = [[preferences objectForKey:@"HotBoard"] boolValue];
-// 		RecommendUser = [[preferences objectForKey:@"RecommendUser"] boolValue];
-// 		oldhotsearch = [[preferences objectForKey:@"oldhotsearch"] boolValue];
-// 		hotsearch = [[preferences objectForKey:@"hotsearch"] boolValue];
-// 		topBarLOT = [[preferences objectForKey:@"topBarLOT"] boolValue];
-// 		normalAd = [[preferences objectForKey:@"normalAd"] boolValue];
-// 		Xigualive = [[preferences objectForKey:@"Xigualive"] boolValue];
-// 	}
-// 	[preferences release];
-// }
-	
-// static NSString *nsNotificationString = @"com.paigu.toutiaopref/preferences.changed";
-// static void notificationCallback(CFNotificationCenterRef center, void *observer, 
-// 	CFStringRef name, const void *object, CFDictionaryRef userInfo)
-// {
-// 	loadPrefs();
-// }
-/*************************************preferenceLoader依赖代码*****************************/
-
 static BOOL Indicator;
 static BOOL topnews;
 static BOOL RelateRead;
@@ -569,69 +502,6 @@ static void loadPrefs()
 }
 %end
 
-// %hook TTAdFeedModel
-// //首页广告数据
-// - (void)setDynamic_adWithNSDictionary:(id)arg1
-// {
-// 	loadPrefs();
-// 	if(normalAd)
-// 		return;
-
-// 	%orig;
-// }
-// - (void)setDynamic_adWithNSString:(id)arg1
-// {
-// 	loadPrefs();
-// 	if(normalAd)
-// 		return;
-
-// 	%orig;
-// }
-// - (void)setRaw_ad_data:(NSDictionary *)raw_ad_data
-// {
-// 	loadPrefs();
-// 	if(normalAd)
-// 		return;
-
-// 	%orig;
-// }
-// %end
-
-// %hook TTFeedLargePicADCell
-// //7.8.3普通版首页广告
-// + (id)fragmentControllerClassNameWithData:(id)arg1
-// {
-// 	loadPrefs();
-// 	if(normalAd)
-// 		return nil;
-
-// 	return %orig;
-// }
-// %end
-
-// %hook TTADVanGoghCell
-// //首页广告视图
-// + (double)heightForData:(id)arg1 cellWidth:(double)arg2 listType:(unsigned long long)arg3
-// {
-// 	loadPrefs();
-// 	if(normalAd)
-// 		return %orig(nil,arg2,arg3);
-
-// 	return %orig;
-// }
-// %end
-
-// %hook TTFeedVideoADCell
-// //首页广告视图
-// + (double)heightForData:(id)arg1 cellWidth:(double)arg2 listType:(unsigned long long)arg3
-// {
-// 	loadPrefs();
-// 	if(normalAd)
-// 		return %orig(nil,arg2,arg3);
-
-// 	return %orig;
-// }
-// %end
 
 %hook TTVFeedListVideoAdCell
 //西瓜视频页广告cell
@@ -682,19 +552,6 @@ static void loadPrefs()
 }
 %end
 
-// %hook UITableViewCell
-// - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-// {
-// 	loadPrefs();
-// 	if(normalAd)
-// 		if([reuseIdentifier isEqualToString:@"TTFeedGroupPicADCell"] 
-// 			|| [reuseIdentifier isEqualToString:@"TTFeedRightPicADCell"]
-// 			|| [reuseIdentifier isEqualToString:@"TTFeedVideoADCell"])
-// 			return nil;
-	
-// 	return %orig;
-// }
-// %end
 
 %hook TTVFeedListVideoAdItem
 //西瓜视频页广告item
@@ -805,12 +662,6 @@ static void loadPrefs()
 	return %orig;
 }
 %end
-// %hook BDNovelReaderManager
-// - (id)requestInsertedVCWithReadModel:(id)arg1 curPageContext:(id)arg2 targetPageContext:(id)arg3 pageChangeInfo:(id)arg4
-// {
-// 	return nil;
-// }
-// %end
 
 
 %hook TTProfileViewController
@@ -971,19 +822,6 @@ static void loadPrefs()
 
 
 
-
-/*************************************preferenceLoader依赖代码*****************************/
-// %ctor
-// {
-// 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-// 	loadPrefs();
-// 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
-// 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, 
-// 		notificationCallback, (CFStringRef)nsNotificationString, NULL, 
-// 			CFNotificationSuspensionBehaviorCoalesce);
-
-// 	[pool release];
-// }
 %ctor
 {
 	@autoreleasepool
