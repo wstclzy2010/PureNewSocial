@@ -99,20 +99,77 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	return %orig;
 }
 %end
-// %hook TTIndicatorView
-// //小视频流量提醒
-// - (id)initWithIndicatorStyle:(long long)arg1 indicatorText:(id)arg2 indicatorImage:(id)arg3 
-// 		maxLine:(long long)arg4 dismissHandler:(id)arg5
-// {
-// 	if(Indicator)
-// 		if([arg2 isEqualToString:@"正在使用流量播放"])
-// 			return nil;
 
-// 	return %orig;	
-// }
+%hook AWEVideoContainerViewControllerNew
+// 7.9.0测试版小视频流量提醒
+- (_Bool)needCellularAlert
+{
+	loadPrefs();
+	if(Indicator)
+		return NO;
+	
+	return %orig;
+}
+%end
 
+%hook TTExploreOrderedDataManager
+//792内测普通版首页feed流数据
+- (NSMutableArray *)mutableItems
+{
+	loadPrefs();
 
-// %end
+	if(!normalAd && !topnews && !miniApp)
+		return %orig;
+
+	NSMutableArray *origArray = %orig;
+	NSMutableArray *adArray = [NSMutableArray new];
+	NSMutableArray *miniArray = [NSMutableArray new];
+	NSMutableArray *topArray = [NSMutableArray new];
+
+	if(origArray.count > 0)
+	{
+		if(normalAd)
+		{
+			
+			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
+			{
+				if([[model adIDStr] length] > 0)
+					[adArray addObject: model];
+			}];
+
+			if(adArray.count > 0)
+				[origArray removeObjectsInArray:adArray];
+		}
+
+		if(miniApp)
+		{
+			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
+			{
+				if([model cellType] == 93) //小程序的cell类型为93
+					[miniArray addObject: model];
+			}];
+
+			if(miniArray.count > 0)
+				[origArray removeObjectsInArray:miniArray];
+		}
+
+		if(topnews)
+		{
+			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
+			{
+				if([[model stickLabel] isEqualToString:@"置顶"])
+					[topArray addObject: model];
+			}];
+
+			if(topArray.count > 0)
+				[origArray removeObjectsInArray:topArray];
+		}
+	}
+	
+	return origArray;
+}
+
+%end
 
 
 %hook ExploreFetchListManager
@@ -436,27 +493,33 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 }
 %end
 
-// %hook TTVFeedListVideoAdCell
-// //西瓜视频页广告cell
-// - (void)setItem:(id)arg1
-// {
-// 	if(normalAd)
-// 	{
-// 		return;
-// 	}
-		
-// }
+%hook TTVFeedListVideoAdCell
+//西瓜视频页广告cell
+- (void)setItem:(id)arg1
+{
+	if(normalAd)
+		if([arg1 isKindOfClass:%c(TTVFeedListVideoAdItem)])
+		{
+			arg1 = nil;
+			return;
+		}	
+	%orig;	
+}
+%end
 
-// - (id)initWithStyle:(long long)arg1 reuseIdentifier:(id)arg2
-// {
-// 	return nil;
-// }
-
-// - (_Bool)isAdCell
-// {
-// 	return NO;
-// }
-// %end
+%hook TTVFeedListPicAdCell
+//7.9.2测试版西瓜视频页广告cell
+- (void)setItem:(id)arg1
+{
+	if(normalAd)
+		if([arg1 isKindOfClass:%c(TTVFeedListPicAdCell)])
+		{
+			arg1 = nil;
+			return;
+		}
+	%orig;	
+}
+%end
 
 
 %hook TTVVideoDetailCommoditySwiperViewController
@@ -495,21 +558,26 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 }
 %end
 
-%hook TTVLPasterADViewController
-- (id)init
-{
-	if(normalAd)
-		return nil;
 
-	return %orig;
-}
-%end
+@interface BDNovelFreeAdHandler
+@property(nonatomic) _Bool lastGetFreeInAddIsFree;
+@property(nonatomic) long long currentBeginFreeAdTime;
+@property(nonatomic) long long limitAdFreeTime; 
+@end
 
-%hook TTVContinuousADHelper
-- (id)init
+
+%hook BDNovelFreeAdHandler
+//小说广告
+- (_Bool)isInAdFreeTime
 {
+	loadPrefs();
 	if(normalAd)
-		return nil;
+	{
+		self.lastGetFreeInAddIsFree = YES;
+		self.currentBeginFreeAdTime = 1;
+		self.limitAdFreeTime = 6666666;
+		return YES;
+	}
 	
 	return %orig;
 }
