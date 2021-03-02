@@ -1,6 +1,14 @@
 #import "ViewController.h"
 
 
+/*
+
+如果你用flex3，那我得得重申一遍，类方法你用不了的，复杂的实现也做不到，建议去我源里下个插件安装，谢谢支持！
+
+*/
+
+static BOOL isShow = NO;
+static MBProgressHUD *hud = nil;
 static BOOL Indicator;
 static BOOL topnews;
 static BOOL RelateRead;
@@ -15,8 +23,11 @@ static BOOL topBarLOT;
 static BOOL normalAd;
 static BOOL Xigualive;
 static BOOL miniApp;
-
+static BOOL videoDownload;
+static BOOL questionsAndAnswers;
+static BOOL column;
 static NSString *appVersion;
+
 static void loadPrefs()
 {
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
@@ -36,88 +47,29 @@ static void loadPrefs()
 	normalAd = [[QSSetting objectForKey:@"normalAd"] boolValue];
 	Xigualive = [[QSSetting objectForKey:@"Xigualive"] boolValue];
 	miniApp = [[QSSetting objectForKey:@"miniApp"] boolValue];
+	videoDownload = [[QSSetting objectForKey:@"videoDownload"] boolValue];
+	questionsAndAnswers = [[QSSetting objectForKey:@"questionsAndAnswers"] boolValue];
+	column = [[QSSetting objectForKey:@"column"] boolValue];
 }
 
 
-%hook TTAdActionModel
-- (id)initWithAdId:(id)arg1 logExtra:(id)arg2 extraData:(id)arg3
-{
-	return nil;
-}
-%end
-
-%hook TTAdWebActionManager
-+ (id)sharedManager
-{
-	return nil;
-}
-%end
-
-%hook TTVPalyerTrafficAlert
-//视频流量提醒
-- (bool)shouldShow
-{
-	loadPrefs();
-	if(Indicator)
-		return NO;
-
-	return %orig;
-}
-
-%end
-
-
-%hook AWEVideoContainerViewController
-// //小视频流量提醒
-- (_Bool)needCellularAlert
-{
-	loadPrefs();
-	if(Indicator)
-		return NO;
-	
-	return %orig;
-}
-%end
-
-
-%hook AWEVideoContainerViewControllerNew
-// 7.9.0小视频流量提醒
-- (_Bool)needCellularAlert
-{
-	loadPrefs();
-	if(Indicator)
-		return NO;
-	
-	return %orig;
-}
-%end
-// %hook TTIndicatorView
-// //小视频流量提醒
-// - (id)initWithIndicatorStyle:(long long)arg1 indicatorText:(id)arg2 indicatorImage:(id)arg3 
-// 		maxLine:(long long)arg4 dismissHandler:(id)arg5
-// {
-// 	if(Indicator)
-// 		if([arg2 isEqualToString:@"正在使用流量播放"])
-// 			return nil;
-
-// 	return %orig;	
-// }
-
-
-// %end
 %hook TTExploreOrderedDataManager
-//792内测普通版首页feed流数据
+//8.1.4普通版首页feed流数据
 - (NSMutableArray *)mutableItems
 {
 	loadPrefs();
 
-	if(!normalAd && !topnews && !miniApp)
+	if(!normalAd && !topnews && !miniApp && !Xigualive && !questionsAndAnswers && !HotBoard && !column)
 		return %orig;
 
 	NSMutableArray *origArray = %orig;
 	NSMutableArray *adArray = [NSMutableArray new];
 	NSMutableArray *miniArray = [NSMutableArray new];
 	NSMutableArray *topArray = [NSMutableArray new];
+	NSMutableArray *liveArray = [NSMutableArray new];
+	NSMutableArray *QAArray = [NSMutableArray new];
+	NSMutableArray *hotBoardArray = [NSMutableArray new];
+	NSMutableArray *columnArray = [NSMutableArray new];
 
 	if(origArray.count > 0)
 	{
@@ -156,6 +108,50 @@ static void loadPrefs()
 
 			if(topArray.count > 0)
 				[origArray removeObjectsInArray:topArray];
+		}
+		if(Xigualive)
+		{
+			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
+			{
+				if([model cellType] == 314 || [model cellType] == 318)//首页直播cell类型为314,直播回放为318
+					[liveArray addObject: model];
+			}];
+
+			if(liveArray.count > 0)
+				[origArray removeObjectsInArray:liveArray];
+		}
+		if(questionsAndAnswers)
+		{
+			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
+			{
+				if([model cellType] == 202)//首页问答cell类型为202
+					[QAArray addObject: model];
+			}];
+
+			if(QAArray.count > 0)
+				[origArray removeObjectsInArray:QAArray];
+		}
+		if(HotBoard)
+		{
+			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
+			{
+				if([model cellType] == 114)//首页热榜cell类型为114
+					[hotBoardArray addObject: model];
+			}];
+
+			if(hotBoardArray.count > 0)
+				[origArray removeObjectsInArray:hotBoardArray];
+		}
+		if(column)
+		{
+			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
+			{
+				if([[model label] isEqualToString:@"专栏"])
+					[columnArray addObject: model];
+			}];
+
+			if(columnArray.count > 0)
+				[origArray removeObjectsInArray:columnArray];
 		}
 	}
 	
@@ -255,6 +251,60 @@ static void loadPrefs()
 }
 %end
 
+
+
+%hook TTAdActionModel
+- (id)initWithAdId:(id)arg1 logExtra:(id)arg2 extraData:(id)arg3
+{
+	return nil;
+}
+%end
+
+%hook TTAdWebActionManager
++ (id)sharedManager
+{
+	return nil;
+}
+%end
+
+%hook TTVPalyerTrafficAlert
+//视频流量提醒
+- (bool)shouldShow
+{
+	loadPrefs();
+	if(Indicator)
+		return NO;
+
+	return %orig;
+}
+
+%end
+
+
+%hook AWEVideoContainerViewController
+// //小视频流量提醒
+- (_Bool)needCellularAlert
+{
+	loadPrefs();
+	if(Indicator)
+		return NO;
+	
+	return %orig;
+}
+%end
+
+
+%hook AWEVideoContainerViewControllerNew
+// 7.9.0小视频流量提醒
+- (_Bool)needCellularAlert
+{
+	loadPrefs();
+	if(Indicator)
+		return NO;
+	
+	return %orig;
+}
+%end
 
 %hook TTAuthorizeHintView
 //首页悬浮推广
@@ -376,17 +426,7 @@ static void loadPrefs()
 }
 %end
 
-%hook TTXiguaLiveNewCell
-//西瓜直播
-+ (double)heightForData:(id)arg1 cellWidth:(double)arg2 listType:(unsigned long long)arg3
-{
-	loadPrefs();
-	if(Xigualive)
-		return %orig(nil,0,arg3);
 
-	return %orig;
-}
-%end
 
 %hook TTRecommendUserCellView
 //关注列表“他们也在用头条”
@@ -409,73 +449,21 @@ static void loadPrefs()
 
 %end
 
-%hook TTTopBar
-//7.0.9顶部热搜
-- (void)setSearchLabelContainer:(UIView *)searchLabelContainer 
-{
-	loadPrefs();
-	if(hotsearch)
-	{
-		if([appVersion isEqualToString:@"7.0.9"])
-			return;
-	}
-	
-	%orig;
-}
 
-%end
+
 
 %hook TTTopBarSearchGuideView
 //新版顶部热搜，旧版没有这个类
-- (void)layoutWithSearchWords:(id)arg1 containerWidth:(double)arg2 containerHeight:(double)arg3
+- (id)initWithFrame:(struct CGRect)arg1
 {
 	loadPrefs();
-	if(hotsearch)
-		return %orig(arg1,0,0);
+	if(!hotsearch)
+		return %orig;
 
-	%orig;
+	return nil;
 }
 %end
 
-
-
-%hook TTCollapsingTopBar
-//移除新版本顶部节日动画
-- (void)setupTopBarLOTAnimationView
-{
-	loadPrefs();
-	if(topBarLOT)
-	{
-		[self removeTopBarLOTAnimationViewIfNeeded];
-		return;		
-	}
-	%orig;
-}
-- (void)setupSearchBarLOTAnimationView
-{
-	loadPrefs();
-	if(topBarLOT)
-		return;
-
-	%orig;
-}
-- (void)setupBackgroundLOTAnimationView
-{
-	loadPrefs();
-	if(topBarLOT)
-		return;
-
-	%orig;
-}
-- (void)setMaxTopBarHeight:(double)maxTopBarHeight
-{
-	loadPrefs();
-	if(topBarLOT)
-		return %orig(72);
-
-	%orig;
-}
-%end
 
 
 %hook TTShowADTask
@@ -502,33 +490,36 @@ static void loadPrefs()
 }
 %end
 
-
-%hook TTVFeedListVideoAdCell
-//西瓜视频页广告cell
-- (void)setItem:(id)arg1
+%hook TLIndexPathDataModel
+//西瓜视频页feed流数据
+- (id)initWithItems:(id)arg1
 {
-	if(normalAd)
-		if([arg1 isKindOfClass:%c(TTVFeedListVideoAdItem)])
+	loadPrefs();
+	if(!normalAd && !Xigualive)
+		return %orig;
+	
+	NSMutableArray *origArray = arg1;
+	NSMutableArray *adArray = [NSMutableArray new];
+
+	if(origArray.count > 0)
+		[origArray enumerateObjectsUsingBlock:^(id model, NSUInteger idx, BOOL * _stop)
 		{
-			arg1 = nil;
-			return;
-		}	
-	%orig;	
+			if(normalAd && [model isMemberOfClass:%c(TTVFeedListVideoAdItem)])
+				[adArray addObject:model];
+
+			if(Xigualive && [model isMemberOfClass:%c(TTVFeedListLiveItem)])
+				[adArray addObject:model];
+		}];
+
+	if(adArray.count > 0)
+		[origArray removeObjectsInArray:adArray];
+
+
+	return %orig(origArray);
 }
 %end
 
-%hook TTVFeedListPicAdCell
-- (void)setItem:(id)arg1
-{
-	if(normalAd)
-		if([arg1 isKindOfClass:%c(TTVFeedListPicAdCell)])
-		{
-			arg1 = nil;
-			return;
-		}
-	%orig;	
-}
-%end
+
 
 %hook TTAppExternalAppBridge
 - (void)preloadAdMpWithParam:(id)arg1 callback:(id)arg2 engine:(id)arg3 controller:(id)arg4
@@ -552,19 +543,6 @@ static void loadPrefs()
 }
 %end
 
-
-%hook TTVFeedListVideoAdItem
-//西瓜视频页广告item
-- (double)cellHeightWithWidth:(long long)arg1
-{
-	loadPrefs();
-	if(normalAd)
-		return 0;
-	
-	return %orig;
-}
-%end
-
 %hook TTVVideoDetailCommoditySwiperViewController
 //视频页商品推荐
 - (id)init
@@ -584,18 +562,10 @@ static void loadPrefs()
 }
 %end
 
-@interface TTVRelatedVideoItem
-@property(readonly, nonatomic) NSString *ad_id;
-@end
-
-@interface TTVDetailRelatedVideoItem
-@property(retain, nonatomic) TTVRelatedVideoItem *article; 
-@end
-
 
 
 %hook TTVVideoDetailRelatedVideoViewController
-//普通版相关视频广告
+//普通版相关视频数据
 - (NSArray *)allRelatedItems
 {
 	loadPrefs();
@@ -607,17 +577,31 @@ static void loadPrefs()
 		return nil;
 	
 	NSArray *origArr = %orig;
+	NSMutableArray *adArray = [NSMutableArray new];
 	NSMutableArray *temArray = [NSMutableArray new];
 	if(normalAd)
 	{
 		if(origArr.count > 0)
-			for (id model in origArr)
+			[origArr enumerateObjectsUsingBlock:^(id model, NSUInteger idx, BOOL * _stop)
+			{
 				[temArray addObject:model];
+			}];
 
-		[temArray removeObjectAtIndex:0];
+		if(temArray.count > 0)		
+			[temArray enumerateObjectsUsingBlock:^(id model, NSUInteger idx, BOOL * _stop)
+			{
+				if ([model isMemberOfClass:%c(TTVVideoDetailRelatedAdItem)]
+					||[model showDislike])  //TTVDetailRelatedVideoItem为广告item时，它的showDislike值为YES
+					[adArray addObject:model];
+			}];
+
+		if(adArray.count > 0)
+			[temArray removeObjectsInArray:adArray];
 	}
 	
-	return temArray;
+	origArr = [temArray mutableCopy];
+
+	return origArr;
 }
 %end
 
@@ -662,6 +646,180 @@ static void loadPrefs()
 	return %orig;
 }
 %end
+
+%hook TTIGTableViewSectionMap
+//微头条广告数据
+- (void)updateWithObjects:(id)arg1 sectionControllers:(id)arg2
+{
+	loadPrefs();
+	if(!normalAd)
+		return %orig(arg1,arg2);
+
+	NSMutableArray *origArray = arg1;
+	NSMutableArray *adArray = [NSMutableArray new];
+
+	if(origArray.count > 0)
+		[origArray enumerateObjectsUsingBlock:^(id model, NSUInteger idx, BOOL * _stop)
+		{
+			if ([model isKindOfClass:%c(ExploreOrderedData)])
+				if([[model adIDStr] length] > 0)
+					[adArray addObject: model];
+		}];
+
+	if(adArray.count > 0)
+		[origArray removeObjectsInArray:adArray];
+
+	%orig(origArray,arg2);
+}
+%end
+
+
+
+%hook TTVPasterADModel
+- (void)setVideoPasterADInfoModel:(id)videoPasterADInfoModel{}
+%end
+
+
+
+/*小视频*/
+%hook TSVNewControlOverlayViewController
+
+- (void)viewDidLoad 
+{
+    %orig;
+	loadPrefs();
+	if(videoDownload)
+	{
+		UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
+    	[self.view addGestureRecognizer:longPress];
+	}
+}
+
+%new
+- (void)longPressAction:(UILongPressGestureRecognizer *)sender 
+{
+    //解决手势触发两次
+    if (sender.state == UIGestureRecognizerStateBegan) 
+	{
+        NSURL *url = nil;
+        UIView *selfView = self.view;
+        NSArray *arrViews = [[selfView superview] subviews];
+        for(UIView *view in arrViews) 
+        {
+            if ([view isKindOfClass:%c(AWEVideoPlayView)]) 
+            {
+                TTShortVideoModel *model = [(AWEVideoPlayView * )view model];
+                TSVVideoModel *videoModel = [model video];
+                TSVMusicVideoURLModel *downloadAddr = [videoModel downloadAddr];
+                NSArray *urlList = [downloadAddr urlList];
+                if (urlList.count > 0) 
+                {
+                    NSString *urlString = urlList[0];
+                    url = [NSURL URLWithString:urlString];
+                    break;
+                }    
+            }
+        }
+        if (url) 
+		{
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"清爽今日头条" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+            UIAlertAction *cAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {}];
+            [alertVC addAction:cAction];
+
+            UIAlertAction *dAction = [UIAlertAction actionWithTitle:@"下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) 
+            {
+		        DownloaderManager *downloadManager = [DownloaderManager sharedDownloaderManager];
+		        downloadManager.delegate = self;
+		        [downloadManager downloadVideoWithURL:url];
+        	}];
+        	[alertVC addAction:dAction];
+        	[self presentViewController:alertVC animated:YES completion:nil];
+        }
+    }
+}
+
+%new
+- (void)videoDownloadeProgress:(float)progress downloadTask:(NSURLSessionDownloadTask * _Nullable)downloadTask {
+    if (!isShow)
+    {
+        hud = [MBProgressHUD showHUDAddedTo:KEY_WINDOW animated:YES];
+        hud.mode = MBProgressHUDModeDeterminate;
+        hud.label.text = NSLocalizedString(@"下载中...", @"HUD loading title");
+        NSProgress *progressObject = [NSProgress progressWithTotalUnitCount:100];
+        hud.progressObject = progressObject;
+        [hud.button setTitle:NSLocalizedString(@"取消", @"HUD cancel button title") forState:UIControlStateNormal];
+        [hud.button addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
+        objc_setAssociatedObject(self, @selector(ttDownloadTask),downloadTask, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        isShow = YES;
+    }
+    hud.progressObject.completedUnitCount = [@(progress * 100)  intValue] ;
+    hud.detailsLabel.text = [NSString stringWithFormat:@"%lld%%",hud.progressObject.completedUnitCount];
+    if (hud.progressObject.fractionCompleted >= 1.f)
+    {
+        dispatch_async(dispatch_get_main_queue(), 
+        ^{
+            [hud hideAnimated:YES];
+            hud = nil;
+            isShow = NO;
+        });
+    }
+}
+
+%new
+- (void)cancel 
+{
+    NSURLSessionDownloadTask *downloadTask = objc_getAssociatedObject(self, @selector(ttDownloadTask));
+    [downloadTask cancel];
+    dispatch_async(dispatch_get_main_queue(), 
+    ^{
+        [hud hideAnimated:YES];
+        hud = nil;
+        isShow = NO;
+    });
+}
+
+%new
+- (void)videoDidFinishDownloaded:(NSString * _Nonnull)filePath 
+{
+    //保存到系统相册
+    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(filePath)) 
+	{
+        UISaveVideoAtPathToSavedPhotosAlbum(filePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+    }
+}
+
+%new
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo 
+{
+    if (error) 
+	{
+		UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                               						  message:@"保存失败"
+                               						  preferredStyle:UIAlertControllerStyleAlert
+                               	   ];
+ 
+		UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault
+		handler:^(UIAlertAction * action) {}];
+		
+		[alert addAction:defaultAction];
+		[self presentViewController:alert animated:YES completion:nil];
+    }
+    else 
+	{
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:KEY_WINDOW animated:YES];
+        hud.mode = MBProgressHUDModeCustomView;
+        hud.square = YES;
+        hud.label.text = NSLocalizedString(@"完成！", @"HUD done title");
+        [hud hideAnimated:YES afterDelay:2.f];
+    }
+    //移除沙盒的缓存文件
+    [[NSFileManager defaultManager] removeItemAtPath:videoPath error:nil];
+    
+}
+
+%end 
+
+
 
 
 %hook TTProfileViewController
@@ -822,6 +980,19 @@ static void loadPrefs()
 
 
 
+
+/*************************************preferenceLoader依赖代码*****************************/
+// %ctor
+// {
+// 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+// 	loadPrefs();
+// 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
+// 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, 
+// 		notificationCallback, (CFStringRef)nsNotificationString, NULL, 
+// 			CFNotificationSuspensionBehaviorCoalesce);
+
+// 	[pool release];
+// }
 %ctor
 {
 	@autoreleasepool
