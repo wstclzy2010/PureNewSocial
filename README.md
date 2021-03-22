@@ -1,4 +1,4 @@
-# iOS今日头条专业版净化(基于专业版7.0.9开发)
+# iOS今日头条专业版净化(始于专业版7.0.9)
 ## 特性
 
 
@@ -19,8 +19,7 @@
 
 ## 截图预览
 
-![Alt text](https://github.com/wstclzy2010/PureNewSocial/blob/master/IMG_0373.PNG)
-![Alt text](https://github.com/wstclzy2010/PureNewSocial/blob/master/IMG_0374.PNG)
+![Alt text](https://github.com/wstclzy2010/PureNewSocial/blob/developer/screenshot/IMG_0380(20210302-182616).JPEG)
 
 ## 设置项集成至应用内
 
