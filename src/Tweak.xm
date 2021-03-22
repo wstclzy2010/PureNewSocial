@@ -1,65 +1,82 @@
 #import "ViewController.h"
 
-
-/*
-
-如果你用flex3，那我得重申一遍，类方法你用不了的，复杂的实现也做不到，建议去我源里下个插件安装，谢谢支持！
-
-*/
-
 static BOOL isShow = NO;
 static MBProgressHUD *hud = nil;
-static BOOL Indicator;
-static BOOL topnews;
-static BOOL RelateRead;
-static BOOL PaidCircle;
-static BOOL RelatedVideo;
-static BOOL ShareView;
-static BOOL ArticleURL;
-static BOOL HotBoard;
-static BOOL RecommendUser;
-static BOOL hotsearch;
-static BOOL topBarLOT;
-static BOOL normalAd;
-static BOOL Xigualive;
-static BOOL miniApp;
-static BOOL videoDownload;
-static BOOL questionsAndAnswers;
-static BOOL column;
-static NSString *appVersion;
 
-static void loadPrefs()
+
+
+%hook TTVVideoDetailViewController
+//跳转播放评论页后，返回按钮跳转到首页
+- (void)_topViewBackButtonPressed
 {
-	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-	appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-	NSUserDefaults *QSSetting = [NSUserDefaults standardUserDefaults];
-	Indicator = [[QSSetting objectForKey:@"Indicator"] boolValue];
-	RelateRead = [[QSSetting objectForKey:@"RelateRead"] boolValue];
-	PaidCircle = [[QSSetting objectForKey:@"PaidCircle"] boolValue];
-	RelatedVideo = [[QSSetting objectForKey:@"RelatedVideo"] boolValue];
-	ShareView = [[QSSetting objectForKey:@"ShareView"] boolValue];
-	topnews = [[QSSetting objectForKey:@"topnews"] boolValue];
-	ArticleURL = [[QSSetting objectForKey:@"ArticleURL"] boolValue];
-	HotBoard = [[QSSetting objectForKey:@"HotBoard"] boolValue];
-	RecommendUser = [[QSSetting objectForKey:@"RecommendUser"] boolValue];
-	hotsearch = [[QSSetting objectForKey:@"hotsearch"] boolValue];
-	topBarLOT = [[QSSetting objectForKey:@"topBarLOT"] boolValue];
-	normalAd = [[QSSetting objectForKey:@"normalAd"] boolValue];
-	Xigualive = [[QSSetting objectForKey:@"Xigualive"] boolValue];
-	miniApp = [[QSSetting objectForKey:@"miniApp"] boolValue];
-	videoDownload = [[QSSetting objectForKey:@"videoDownload"] boolValue];
-	questionsAndAnswers = [[QSSetting objectForKey:@"questionsAndAnswers"] boolValue];
-	column = [[QSSetting objectForKey:@"column"] boolValue];
+	if(![QSOptions sharedConfig].autoOnComment)
+		return %orig;
+
+	[self.navigationController popToRootViewControllerAnimated:YES];
 }
+%end
+
+
+
+%hook TTVDetailFeedBottomContainerView
+//自动跳转视频评论页
+- (void)layoutSubviews
+{
+	if(![QSOptions sharedConfig].autoOnComment)
+		return %orig;
+
+	%orig;
+
+	if([[[self nextResponder] nextResponder] isMemberOfClass:%c(TTVDetailFeedVideoCell)])
+	{
+		if(self.cellEntity.isFirstVideo) //isFirstVideo判断当前视频是否为最开始点击的视频，避免在视频流页面向下滑动时又出现跳转到首个视频的评论页面的情况
+		{
+			[self commentButtonHandler:nil];
+			return;
+		}
+	}	
+}
+%end
+
+
+
+%hook TTAdActionModel
+- (id)initWithAdId:(id)arg1 logExtra:(id)arg2 extraData:(id)arg3
+{
+	return [QSOptions sharedConfig].normalAd ? nil : %orig;
+}
+%end
+
+%hook TTAdWebActionManager
++ (id)sharedManager
+{
+	return [QSOptions sharedConfig].normalAd ? nil : %orig;
+}
+%end
+
+%hook TTReachability
+//模拟wifi连接
+- (long long)currentReachabilityStatus
+{
+	return [QSOptions sharedConfig].indicator ? 1 : %orig;
+}
+%end
+
+
 
 
 %hook TTExploreOrderedDataManager
 //8.1.4普通版首页feed流数据
 - (NSMutableArray *)mutableItems
 {
-	loadPrefs();
 
-	if(!normalAd && !topnews && !miniApp && !Xigualive && !questionsAndAnswers && !HotBoard && !column)
+	if(![QSOptions sharedConfig].normalAd 
+		&& ![QSOptions sharedConfig].topnews 
+		&& ![QSOptions sharedConfig].miniApp 
+		&& ![QSOptions sharedConfig].xigualive 
+		&& ![QSOptions sharedConfig].questionsAndAnswers 
+		&& ![QSOptions sharedConfig].hotBoard 
+		&& ![QSOptions sharedConfig].column)
 		return %orig;
 
 	NSMutableArray *origArray = %orig;
@@ -73,7 +90,7 @@ static void loadPrefs()
 
 	if(origArray.count > 0)
 	{
-		if(normalAd)
+		if([QSOptions sharedConfig].normalAd)
 		{
 			
 			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
@@ -86,7 +103,7 @@ static void loadPrefs()
 				[origArray removeObjectsInArray:adArray];
 		}
 
-		if(miniApp)
+		if([QSOptions sharedConfig].miniApp)
 		{
 			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
 			{
@@ -98,7 +115,7 @@ static void loadPrefs()
 				[origArray removeObjectsInArray:miniArray];
 		}
 
-		if(topnews)
+		if([QSOptions sharedConfig].topnews)
 		{
 			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
 			{
@@ -109,7 +126,7 @@ static void loadPrefs()
 			if(topArray.count > 0)
 				[origArray removeObjectsInArray:topArray];
 		}
-		if(Xigualive)
+		if([QSOptions sharedConfig].xigualive)
 		{
 			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
 			{
@@ -120,7 +137,7 @@ static void loadPrefs()
 			if(liveArray.count > 0)
 				[origArray removeObjectsInArray:liveArray];
 		}
-		if(questionsAndAnswers)
+		if([QSOptions sharedConfig].questionsAndAnswers)
 		{
 			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
 			{
@@ -131,7 +148,7 @@ static void loadPrefs()
 			if(QAArray.count > 0)
 				[origArray removeObjectsInArray:QAArray];
 		}
-		if(HotBoard)
+		if([QSOptions sharedConfig].hotBoard)
 		{
 			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
 			{
@@ -142,7 +159,7 @@ static void loadPrefs()
 			if(hotBoardArray.count > 0)
 				[origArray removeObjectsInArray:hotBoardArray];
 		}
-		if(column)
+		if([QSOptions sharedConfig].column)
 		{
 			[origArray enumerateObjectsUsingBlock:^(ExploreOrderedData * model, NSUInteger idx, BOOL * _stop)
 			{
@@ -164,8 +181,7 @@ static void loadPrefs()
 //专业版置顶新闻(在7.9.2测试版中不再使用)
 - (void)setItems:(NSArray *)items
 {
-	loadPrefs();
-	if(topnews)
+	if([QSOptions sharedConfig].topnews)
 	{
 		NSMutableArray *temArray = [NSMutableArray new];
 		NSMutableArray *adArray = [NSMutableArray new];
@@ -193,11 +209,7 @@ static void loadPrefs()
 
 + (double)heightForData:(id)arg1 cellWidth:(double)arg2 listType:(unsigned long long)arg3
 {	
-	loadPrefs();
-	if(topnews)
-		return %orig(nil,arg2,arg3);
-	
-	return %orig;
+	return [QSOptions sharedConfig].topnews ? %orig(nil,arg2,arg3) : %orig;
 }
 
 %end
@@ -206,11 +218,7 @@ static void loadPrefs()
 //7.0.9置顶新闻
 + (double)heightForData:(id)arg1 cellWidth:(double)arg2 listType:(unsigned long long)arg3
 {	
-	loadPrefs();
-	if(topnews)
-		return %orig(nil,arg2,arg3);
-	
-	return %orig;
+	return [QSOptions sharedConfig].topnews ? %orig(nil,arg2,arg3) : %orig;
 }
 %end
 
@@ -218,11 +226,7 @@ static void loadPrefs()
 //普通版置顶新闻
 + (double)heightForData:(id)arg1 cellWidth:(double)arg2 listType:(unsigned long long)arg3
 {
-	loadPrefs();
-	if(topnews)
-		return %orig(nil,arg2,arg3);
-
-	return %orig;
+	return [QSOptions sharedConfig].topnews ? %orig(nil,arg2,arg3) : %orig;
 }
 %end
 
@@ -231,11 +235,7 @@ static void loadPrefs()
 //文章底部相关文章
 - (id)initWithWidth:(double)arg1
 {
-	loadPrefs();
-	if(RelateRead)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].relateRead ? nil : %orig;
 }
 %end
 
@@ -243,75 +243,16 @@ static void loadPrefs()
 //7.8.3新版文章底部相关文章
 - (id)initWithWidth:(double)arg1
 {
-	loadPrefs();
-	if(RelateRead)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].relateRead ? nil : %orig;
 }
 %end
 
-
-
-%hook TTAdActionModel
-- (id)initWithAdId:(id)arg1 logExtra:(id)arg2 extraData:(id)arg3
-{
-	return nil;
-}
-%end
-
-%hook TTAdWebActionManager
-+ (id)sharedManager
-{
-	return nil;
-}
-%end
-
-%hook TTVPalyerTrafficAlert
-//视频流量提醒
-- (bool)shouldShow
-{
-	loadPrefs();
-	if(Indicator)
-		return NO;
-
-	return %orig;
-}
-
-%end
-
-
-%hook AWEVideoContainerViewController
-// //小视频流量提醒
-- (_Bool)needCellularAlert
-{
-	loadPrefs();
-	if(Indicator)
-		return NO;
-	
-	return %orig;
-}
-%end
-
-
-%hook AWEVideoContainerViewControllerNew
-// 7.9.0小视频流量提醒
-- (_Bool)needCellularAlert
-{
-	loadPrefs();
-	if(Indicator)
-		return NO;
-	
-	return %orig;
-}
-%end
 
 %hook TTAuthorizeHintView
 //首页悬浮推广
 - (void)show
 {
-	loadPrefs();
-	if(normalAd)
+	if([QSOptions sharedConfig].normalAd)
 		return;
 
 	%orig;
@@ -321,20 +262,12 @@ static void loadPrefs()
 %hook TTFeedActivityView
 - (_Bool)shouldShowActivity
 {
-	loadPrefs();
-	if(normalAd)
-		return NO;
-
-	return %orig;
+	return [QSOptions sharedConfig].normalAd ? NO : %orig;
 }
 
 - (id)init
 {
-	loadPrefs();
-	if(normalAd)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].normalAd ? nil : %orig;
 }
 %end
 
@@ -342,11 +275,7 @@ static void loadPrefs()
 //文章下方相关圈子的高度
 - (id)init
 {
-	loadPrefs();
-	if(PaidCircle)
-    	return nil;	
-
-	return %orig;
+	return [QSOptions sharedConfig].paidCircle ? nil : %orig;
 }
 %end
 
@@ -356,8 +285,7 @@ static void loadPrefs()
 //缩小分享区
 - (void)setShowShareView:(_Bool)showShareView
 {
-	loadPrefs();
-	if(ShareView)
+	if([QSOptions sharedConfig].shareView)
 		return %orig(NO);
 
 	%orig;
@@ -368,28 +296,16 @@ static void loadPrefs()
 //文章底部相关搜索
 + (id)adArticleInfoString
 {
-	loadPrefs();
-	if(ArticleURL)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].articleURL ? nil : %orig;
 }
 + (id)new27ArticleInfoString
 {
-	loadPrefs();
-	if(ArticleURL)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].articleURL ? nil : %orig;
 }
 
 + (id)newArticleInfoString
 {
-	loadPrefs();
-	if(ArticleURL)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].articleURL ? nil : %orig;
 }
 %end
 
@@ -397,11 +313,7 @@ static void loadPrefs()
 //新版本头条会出现的热榜
 - (id)initWithFrame:(struct CGRect)arg1
 {
-	loadPrefs();
-	if(HotBoard)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].hotBoard ? nil : %orig;
 }
 
 %end
@@ -410,16 +322,12 @@ static void loadPrefs()
 //新版本头条会出现的热榜热点
 + (double)heightForData:(id)arg1 cellWidth:(double)arg2 listType:(unsigned long long)arg3
 {
-	loadPrefs();
-	if(HotBoard)
-		return %orig(nil,0,arg3);
-
-	return %orig;
+	return [QSOptions sharedConfig].hotBoard ? %orig(nil,0,arg3) : %orig;
 }
+
 - (void)willAppear
 {
-	loadPrefs();
-	if(HotBoard)
+	if([QSOptions sharedConfig].hotBoard)
 		return;
 	
 	%orig;
@@ -432,23 +340,15 @@ static void loadPrefs()
 //关注列表“他们也在用头条”
 - (id)initWithFrame:(struct CGRect)arg1
 {
-	loadPrefs();
-	if(RecommendUser)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].recommendUser ? nil : %orig;
 }
+
 + (double)heightForData:(id)arg1 cellWidth:(double)arg2 listType:(unsigned long long)arg3 slice:(_Bool)arg4
 {
-	loadPrefs();
-	if(RecommendUser)
-		return %orig(nil,0,arg3,arg4);
-
-	return %orig;
+	return [QSOptions sharedConfig].recommendUser ? %orig(nil,0,arg3,arg4) : %orig;
 }
 
 %end
-
 
 
 
@@ -456,22 +356,56 @@ static void loadPrefs()
 //新版顶部热搜，旧版没有这个类
 - (id)initWithFrame:(struct CGRect)arg1
 {
-	loadPrefs();
-	if(!hotsearch)
-		return %orig;
-
-	return nil;
+	return [QSOptions sharedConfig].hotsearch ? nil : %orig;
 }
 %end
 
+
+
+// %hook TTCollapsingTopBar
+// //移除新版本顶部节日动画
+// - (void)setupTopBarLOTAnimationView
+// {
+//
+// 	if(topBarLOT)
+// 	{
+// 		[self removeTopBarLOTAnimationViewIfNeeded];
+// 		return;		
+// 	}
+// 	%orig;
+// }
+// - (void)setupSearchBarLOTAnimationView
+// {
+//
+// 	if(topBarLOT)
+// 		return;
+
+// 	%orig;
+// }
+// - (void)setupBackgroundLOTAnimationView
+// {
+//
+// 	if(topBarLOT)
+// 		return;
+
+// 	%orig;
+// }
+// - (void)setMaxTopBarHeight:(double)maxTopBarHeight
+// {
+//
+// 	if(topBarLOT)
+// 		return %orig(72);
+
+// 	%orig;
+// }
+// %end
 
 
 %hook TTShowADTask
 //开屏广告
 - (void)startWithApplication:(id)arg1 options:(id)arg2
 {
-	loadPrefs();
-	if(normalAd)
+	if([QSOptions sharedConfig].normalAd)
 		return;
 
 	%orig;
@@ -482,11 +416,7 @@ static void loadPrefs()
 //详情页广告
 - (id)initWithDictionary:(id)arg1
 {
-	loadPrefs();
-	if(normalAd)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].normalAd ? nil : %orig;
 }
 %end
 
@@ -494,8 +424,7 @@ static void loadPrefs()
 //西瓜视频页feed流数据
 - (id)initWithItems:(id)arg1
 {
-	loadPrefs();
-	if(!normalAd && !Xigualive)
+	if(![QSOptions sharedConfig].normalAd && ![QSOptions sharedConfig].xigualive)
 		return %orig;
 	
 	NSMutableArray *origArray = arg1;
@@ -504,10 +433,10 @@ static void loadPrefs()
 	if(origArray.count > 0)
 		[origArray enumerateObjectsUsingBlock:^(id model, NSUInteger idx, BOOL * _stop)
 		{
-			if(normalAd && [model isMemberOfClass:%c(TTVFeedListVideoAdItem)])
+			if([QSOptions sharedConfig].normalAd && [model isMemberOfClass:%c(TTVFeedListVideoAdItem)])
 				[adArray addObject:model];
 
-			if(Xigualive && [model isMemberOfClass:%c(TTVFeedListLiveItem)])
+			if([QSOptions sharedConfig].xigualive && [model isMemberOfClass:%c(TTVFeedListLiveItem)])
 				[adArray addObject:model];
 		}];
 
@@ -524,9 +453,9 @@ static void loadPrefs()
 %hook TTAppExternalAppBridge
 - (void)preloadAdMpWithParam:(id)arg1 callback:(id)arg2 engine:(id)arg3 controller:(id)arg4
 {
-	loadPrefs();
-	if(normalAd)
+	if([QSOptions sharedConfig].normalAd)
 		return;
+
 	%orig;
 }
 %end
@@ -535,11 +464,7 @@ static void loadPrefs()
 //启动广告
 - (id)initWithFrame:(struct CGRect)arg1 model:(id)arg2
 {
-	loadPrefs();
-	if(normalAd)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].normalAd ? nil : %orig;
 }
 %end
 
@@ -547,20 +472,17 @@ static void loadPrefs()
 //视频页商品推荐
 - (id)init
 {
-	loadPrefs();
-	if(normalAd)
-		return nil;
-
-	return %orig;
+	return [QSOptions sharedConfig].normalAd ? nil : %orig;
 }
 %end
 
 %hook TTVRelatedVideoItem
 - (_Bool)hasAd
 {
-	return NO;
+	return [QSOptions sharedConfig].normalAd ? NO : %orig;
 }
 %end
+
 
 
 
@@ -568,18 +490,17 @@ static void loadPrefs()
 //普通版相关视频数据
 - (NSArray *)allRelatedItems
 {
-	loadPrefs();
 
-	if(!normalAd && !RelatedVideo)
+	if(![QSOptions sharedConfig].normalAd && ![QSOptions sharedConfig].relatedVideo)
 		return %orig;
 
-	if(RelatedVideo)
+	if([QSOptions sharedConfig].relatedVideo)
 		return nil;
 	
 	NSArray *origArr = %orig;
 	NSMutableArray *adArray = [NSMutableArray new];
 	NSMutableArray *temArray = [NSMutableArray new];
-	if(normalAd)
+	if([QSOptions sharedConfig].normalAd)
 	{
 		if(origArr.count > 0)
 			[origArr enumerateObjectsUsingBlock:^(id model, NSUInteger idx, BOOL * _stop)
@@ -609,8 +530,7 @@ static void loadPrefs()
 //放映厅电影广告
 - (void)requestPasterAD
 {
-	loadPrefs();
-	if(normalAd)
+	if([QSOptions sharedConfig].normalAd)
 		return;
 
 	%orig;
@@ -620,11 +540,7 @@ static void loadPrefs()
 %hook TTVContinuousADHelper
 - (id)init
 {
-	loadPrefs();
-	if(normalAd)
-		return nil;
-	
-	return %orig;
+	return [QSOptions sharedConfig].normalAd ? nil : %orig;
 }
 %end
 
@@ -634,8 +550,7 @@ static void loadPrefs()
 //小说广告
 - (_Bool)isInAdFreeTime
 {
-	loadPrefs();
-	if(normalAd)
+	if([QSOptions sharedConfig].normalAd)
 	{
 		self.lastGetFreeInAddIsFree = YES;
 		self.currentBeginFreeAdTime = 1;
@@ -651,8 +566,7 @@ static void loadPrefs()
 //微头条广告数据
 - (void)updateWithObjects:(id)arg1 sectionControllers:(id)arg2
 {
-	loadPrefs();
-	if(!normalAd)
+	if(![QSOptions sharedConfig].normalAd)
 		return %orig(arg1,arg2);
 
 	NSMutableArray *origArray = arg1;
@@ -676,7 +590,13 @@ static void loadPrefs()
 
 
 %hook TTVPasterADModel
-- (void)setVideoPasterADInfoModel:(id)videoPasterADInfoModel{}
+- (void)setVideoPasterADInfoModel:(id)videoPasterADInfoModel
+{
+	if([QSOptions sharedConfig].normalAd)
+		return;
+	
+	%orig;
+}
 %end
 
 
@@ -687,8 +607,7 @@ static void loadPrefs()
 - (void)viewDidLoad 
 {
     %orig;
-	loadPrefs();
-	if(videoDownload)
+	if([QSOptions sharedConfig].videoDownload)
 	{
 		UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
     	[self.view addGestureRecognizer:longPress];
@@ -704,16 +623,13 @@ static void loadPrefs()
         NSURL *url = nil;
         UIView *selfView = self.view;
         NSArray *arrViews = [[selfView superview] subviews];
-        for(UIView *view in arrViews) 
-        {
-            if ([view isKindOfClass:%c(AWEVideoPlayView)]) 
-            {
+        for(UIView *view in arrViews) {
+            if ([view isKindOfClass:%c(AWEVideoPlayView)]) {
                 TTShortVideoModel *model = [(AWEVideoPlayView * )view model];
                 TSVVideoModel *videoModel = [model video];
                 TSVMusicVideoURLModel *downloadAddr = [videoModel downloadAddr];
                 NSArray *urlList = [downloadAddr urlList];
-                if (urlList.count > 0) 
-                {
+                if (urlList.count > 0) {
                     NSString *urlString = urlList[0];
                     url = [NSURL URLWithString:urlString];
                     break;
@@ -723,17 +639,17 @@ static void loadPrefs()
         if (url) 
 		{
             UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"清爽今日头条" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-            UIAlertAction *cAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {}];
+            UIAlertAction *cAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            }];
             [alertVC addAction:cAction];
 
-            UIAlertAction *dAction = [UIAlertAction actionWithTitle:@"下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) 
-            {
-		        DownloaderManager *downloadManager = [DownloaderManager sharedDownloaderManager];
-		        downloadManager.delegate = self;
-		        [downloadManager downloadVideoWithURL:url];
-        	}];
-        	[alertVC addAction:dAction];
-        	[self presentViewController:alertVC animated:YES completion:nil];
+            UIAlertAction *dAction = [UIAlertAction actionWithTitle:@"下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            DownloaderManager *downloadManager = [DownloaderManager sharedDownloaderManager];
+            downloadManager.delegate = self;
+            [downloadManager downloadVideoWithURL:url];
+        }];
+        [alertVC addAction:dAction];
+        [self presentViewController:alertVC animated:YES completion:nil];
         }
     }
 }
@@ -749,15 +665,15 @@ static void loadPrefs()
         hud.progressObject = progressObject;
         [hud.button setTitle:NSLocalizedString(@"取消", @"HUD cancel button title") forState:UIControlStateNormal];
         [hud.button addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
-        objc_setAssociatedObject(self, @selector(ttDownloadTask),downloadTask, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(ttDownloadTask),
+                         downloadTask, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         isShow = YES;
     }
     hud.progressObject.completedUnitCount = [@(progress * 100)  intValue] ;
     hud.detailsLabel.text = [NSString stringWithFormat:@"%lld%%",hud.progressObject.completedUnitCount];
     if (hud.progressObject.fractionCompleted >= 1.f)
     {
-        dispatch_async(dispatch_get_main_queue(), 
-        ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [hud hideAnimated:YES];
             hud = nil;
             isShow = NO;
@@ -770,8 +686,7 @@ static void loadPrefs()
 {
     NSURLSessionDownloadTask *downloadTask = objc_getAssociatedObject(self, @selector(ttDownloadTask));
     [downloadTask cancel];
-    dispatch_async(dispatch_get_main_queue(), 
-    ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [hud hideAnimated:YES];
         hud = nil;
         isShow = NO;
@@ -779,8 +694,7 @@ static void loadPrefs()
 }
 
 %new
-- (void)videoDidFinishDownloaded:(NSString * _Nonnull)filePath 
-{
+- (void)videoDidFinishDownloaded:(NSString * _Nonnull)filePath {
     //保存到系统相册
     if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(filePath)) 
 	{
@@ -789,20 +703,20 @@ static void loadPrefs()
 }
 
 %new
-- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo 
-{
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
     if (error) 
 	{
 		UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
-                               						  message:@"保存失败"
-                               						  preferredStyle:UIAlertControllerStyleAlert
-                               	   ];
+                               message:@"保存失败"
+                               preferredStyle:UIAlertControllerStyleAlert];
  
 		UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault
 		handler:^(UIAlertAction * action) {}];
 		
 		[alert addAction:defaultAction];
 		[self presentViewController:alert animated:YES completion:nil];
+        // UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Save Failed!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        // [alert show];
     }
     else 
 	{
@@ -818,7 +732,6 @@ static void loadPrefs()
 }
 
 %end 
-
 
 
 
@@ -912,6 +825,8 @@ static void loadPrefs()
 	else
 	{
 		static NSString *ID = @"qscell";
+		NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+		NSString *appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
 		if([self versionCompareFirst:appVersion andVersionSecond:@"7.9.0"] != 1)
 		{
@@ -980,25 +895,101 @@ static void loadPrefs()
 
 
 
-
-/*************************************preferenceLoader依赖代码*****************************/
-// %ctor
+// %hook TTVPalyerTrafficAlert
+// //视频流量提醒
+// - (bool)shouldShow
 // {
-// 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-// 	loadPrefs();
-// 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
-// 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, 
-// 		notificationCallback, (CFStringRef)nsNotificationString, NULL, 
-// 			CFNotificationSuspensionBehaviorCoalesce);
+// 	if(![QSOptions sharedConfig].indicator)
+// 		return %orig;
 
-// 	[pool release];
+// 	return NO;
 // }
-%ctor
-{
-	@autoreleasepool
-	{
-		loadPrefs();
-	}
-}
+
+// %end
 
 
+// %hook AWEVideoContainerViewController
+// // //小视频流量提醒
+// - (_Bool)needCellularAlert
+// {
+// 	if(![QSOptions sharedConfig].indicator)
+// 		return %orig;
+
+// 	return NO;
+// }
+// %end
+
+
+// %hook AWEVideoContainerViewControllerNew
+// // 7.9.0小视频流量提醒
+// - (_Bool)needCellularAlert
+// {
+// 	if(![QSOptions sharedConfig].indicator)
+// 		return %orig;
+
+// 	return NO;
+// }
+// %end
+// %hook TTIndicatorView
+// //小视频流量提醒
+// - (id)initWithIndicatorStyle:(long long)arg1 indicatorText:(id)arg2 indicatorImage:(id)arg3 
+// 		maxLine:(long long)arg4 dismissHandler:(id)arg5
+// {
+// 	if(Indicator)
+// 		if([arg2 isEqualToString:@"正在使用流量播放"])
+// 			return nil;
+
+// 	return %orig;	
+// }
+
+
+// %hook TTVFeedListVideoAdItem
+// //西瓜视频页广告item
+// - (double)cellHeightWithWidth:(long long)arg1
+// {
+//
+// 	if(normalAd)
+// 		return 0;
+	
+// 	return %orig;
+// }
+// %end
+
+// %hook TTVFeedListVideoAdCell
+// //西瓜视频页广告cell
+// - (void)setItem:(id)arg1
+// {
+// 	if(normalAd)
+// 		if([arg1 isKindOfClass:%c(TTVFeedListVideoAdItem)])
+// 		{
+// 			arg1 = nil;
+// 			return;
+// 		}	
+// 	%orig;	
+// }
+// %end
+
+// %hook TTVFeedListPicAdItem
+// //西瓜视频页广告item
+// - (double)cellHeightWithWidth:(long long)arg1
+// {
+//
+// 	if(normalAd)
+// 		return 0;
+	
+// 	return %orig;
+// }
+// %end
+
+// %hook TTVFeedListPicAdCell
+// - (void)setItem:(id)arg1
+// {
+// 	if(normalAd)
+// 		if([arg1 isKindOfClass:%c(TTVFeedListPicAdItem)])
+// 		{
+// 			arg1 = nil;
+// 			return;
+// 		}
+// 	%orig;	
+// }
+// %end

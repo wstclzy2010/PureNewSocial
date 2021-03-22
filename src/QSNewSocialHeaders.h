@@ -135,3 +135,18 @@
 
 @interface SSThemedView : UIView
 @end
+
+@interface TTVDetailFeedListItem
+@property(nonatomic) _Bool isFirstVideo;
+@end
+
+@interface TTVDetailFeedVideoItem : TTVDetailFeedListItem
+@end
+
+@interface TTVDetailFeedBottomContainerView : UIView
+@property(retain, nonatomic) TTVDetailFeedListItem *cellEntity;
+- (void)commentButtonHandler:(id)arg1;
+@end
+
+@interface TTVVideoDetailViewController : UIViewController
+@end

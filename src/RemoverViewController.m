@@ -52,25 +52,32 @@
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    NSInteger count;
     //文章相关
     if(section == 0)
-        return 3;
+        count = 3;
 
     //首页相关
     else if(section == 1)
-        return 4;
+        count = 4;
     //其他项
     else
-        return 7;
- 
+        count = 7;
+    
+    return count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if((indexPath.section == 0 && indexPath.row == 10))
-        return 78;
+    CGFloat cellHeight = 47;
 
-    return 49;
+    if((indexPath.section == 2 && indexPath.row == 5)
+        || (indexPath.section == 2 && indexPath.row == 6))
+        cellHeight = 77;
+    else if(indexPath.section == 2 && indexPath.row == 4)
+        cellHeight = 97;
+
+    return cellHeight;
 }
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
@@ -92,7 +99,7 @@
         if (indexPath.row == 0)
         {
             cell.tt_titleLabel.text = @"文章下相关文章";
-            switchView.on = [QSDefaults boolForKey:@"RelateRead"];
+            [switchView setOn:[QSOptions sharedConfig].relateRead animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_RelateRead:)
                 forControlEvents:UIControlEventValueChanged];
@@ -101,7 +108,7 @@
         else if (indexPath.row == 1)
         {
             cell.tt_titleLabel.text = @"文章下相关圈子";    
-            switchView.on = [QSDefaults boolForKey:@"PaidCircle"];
+            [switchView setOn:[QSOptions sharedConfig].paidCircle animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_PaidCircle:)
                 forControlEvents:UIControlEventValueChanged];
@@ -110,7 +117,7 @@
         else if (indexPath.row == 2)
         {
             cell.tt_titleLabel.text = @"文章下相关搜索";          
-            switchView.on = [QSDefaults boolForKey:@"ArticleURL"];
+            [switchView setOn:[QSOptions sharedConfig].articleURL animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_ArticleURL:)
                 forControlEvents:UIControlEventValueChanged];
@@ -124,7 +131,7 @@
         if (indexPath.row == 0)
         {
             cell.tt_titleLabel.text = @"首页的置顶新闻";
-            switchView.on = [QSDefaults boolForKey:@"topnews"];
+            [switchView setOn:[QSOptions sharedConfig].topnews animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_topnews:)
                 forControlEvents:UIControlEventValueChanged];
@@ -133,7 +140,7 @@
         else if (indexPath.row == 1)
         {
             cell.tt_titleLabel.text = @"首页推荐小程序";  
-            switchView.on = [QSDefaults boolForKey:@"miniApp"];
+            [switchView setOn:[QSOptions sharedConfig].miniApp animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_miniApp:)
                 forControlEvents:UIControlEventValueChanged];
@@ -142,7 +149,7 @@
         else if (indexPath.row == 2)
         {
             cell.tt_titleLabel.text = @"首页的推荐问答";          
-            switchView.on = [QSDefaults boolForKey:@"questionsAndAnswers"];
+            [switchView setOn:[QSOptions sharedConfig].questionsAndAnswers animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_questionsAndAnswers:)
                 forControlEvents:UIControlEventValueChanged];
@@ -151,7 +158,7 @@
         else if (indexPath.row == 3)
         {
             cell.tt_titleLabel.text = @"首页的推荐专栏";        
-            switchView.on = [QSDefaults boolForKey:@"column"];
+            [switchView setOn:[QSOptions sharedConfig].column animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_column:)
                 forControlEvents:UIControlEventValueChanged];
@@ -165,7 +172,7 @@
         if (indexPath.row == 0)
         {
             cell.tt_titleLabel.text = @"视频下相关视频";
-            switchView.on = [QSDefaults boolForKey:@"RelatedVideo"];
+            [switchView setOn:[QSOptions sharedConfig].relatedVideo animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_RelatedVideo:)
                 forControlEvents:UIControlEventValueChanged];
@@ -174,14 +181,14 @@
         else if (indexPath.row == 1)
         {
             cell.tt_titleLabel.text = @"新版本热榜热点";
-            switchView.on = [QSDefaults boolForKey:@"HotBoard"];
+            [switchView setOn:[QSOptions sharedConfig].hotBoard animated:YES];
             [switchView addTarget:self action:@selector(qs_HotBoard:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchView;
         }
         else if (indexPath.row == 2)
         {
             cell.tt_titleLabel.text = @"关注区推荐关注";
-            switchView.on = [QSDefaults boolForKey:@"RecommendUser"];
+            [switchView setOn:[QSOptions sharedConfig].recommendUser animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_RecommendUser:)
                 forControlEvents:UIControlEventValueChanged];
@@ -190,7 +197,7 @@
         else if (indexPath.row == 3)
         {
             cell.tt_titleLabel.text = @"节日和活动横幅";
-            switchView.on = [QSDefaults boolForKey:@"topBarLOT"];
+            [switchView setOn:[QSOptions sharedConfig].topBarLOT animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_topBarLOT:)
                 forControlEvents:UIControlEventValueChanged];
@@ -198,20 +205,21 @@
         }
         else if (indexPath.row == 4)
         {
-            cell.tt_titleLabel.text = @"头条的直播推荐";
-            cell.tt_DetailLabel.text = @"包括首页和西瓜视频页的正在直播和直播回放的推荐";     
-            switchView.on = [QSDefaults boolForKey:@"Xigualive"];
+            cell.tt_titleLabel.text = @"视频的流量提醒";
+            cell.tt_DetailLabel.text = @"模拟为WiFi连接，将不再出现任何流量提醒、免流提醒，且视频默认为1080P画质";
+            [switchView setOn:[QSOptions sharedConfig].indicator animated:YES];
             [switchView addTarget:self
-                action:@selector(qs_Xigualive:)
+                action:@selector(qs_Indicator:)
                 forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchView;
         }
         else if (indexPath.row == 5)
         {
-            cell.tt_titleLabel.text = @"视频的流量提醒";
-            [switchView setOn:[QSDefaults boolForKey:@"Indicator"] animated:YES];
+            cell.tt_titleLabel.text = @"头条的直播推荐";
+            cell.tt_DetailLabel.text = @"包括首页和西瓜视频页的正在直播和直播回放的推荐";     
+            [switchView setOn:[QSOptions sharedConfig].xigualive animated:YES];
             [switchView addTarget:self
-                action:@selector(qs_Indicator:)
+                action:@selector(qs_Xigualive:)
                 forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchView;
         }
@@ -219,7 +227,7 @@
         {
             cell.tt_titleLabel.text = @"顶部的热搜文字";
             cell.tt_DetailLabel.text = @"此选项的生效要求干掉应用";
-            [switchView setOn:[QSDefaults boolForKey:@"hotsearch"] animated:YES];
+            [switchView setOn:[QSOptions sharedConfig].hotsearch animated:YES];
             [switchView addTarget:self
                 action:@selector(qs_hotsearch:)
                 forControlEvents:UIControlEventValueChanged];
@@ -232,84 +240,77 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-     if (section == 1)
-        return @"这一组选项的生效要求上下滑动列表";
+    NSString *headerLabel = nil;
 
-    return nil;
+    if (section == 1)
+        headerLabel =  @"这一组选项的生效要求上下滑动列表";
+
+    return headerLabel;
 }
 
+
+// - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+// {
+
+// }
 
 
 - (void)qs_Indicator:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"Indicator"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setIndicator:switchView.isOn];
 }
 - (void)qs_RelateRead:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"RelateRead"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setRelateRead:switchView.isOn];
 }
 - (void)qs_PaidCircle:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"PaidCircle"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setPaidCircle:switchView.isOn];
 }
 - (void)qs_RelatedVideo:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"RelatedVideo"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setRelatedVideo:switchView.isOn];
 }
 - (void)qs_topnews:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"topnews"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setTopnews:switchView.isOn];
 }
 - (void)qs_ArticleURL:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"ArticleURL"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setArticleURL:switchView.isOn];
 }
 - (void)qs_HotBoard:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"HotBoard"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setHotBoard:switchView.isOn];
 }
 - (void)qs_RecommendUser:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"RecommendUser"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setRecommendUser:switchView.isOn];
 }
 - (void)qs_hotsearch:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"hotsearch"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setHotsearch:switchView.isOn];
 }
 - (void)qs_topBarLOT:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"topBarLOT"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setTopBarLOT:switchView.isOn];
 }
 
 - (void)qs_Xigualive:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"Xigualive"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setXigualive:switchView.isOn];
 }
 - (void)qs_miniApp:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"miniApp"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setMiniApp:switchView.isOn];
 }
 - (void)qs_questionsAndAnswers:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"questionsAndAnswers"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setQuestionsAndAnswers:switchView.isOn];
 }
 - (void)qs_column:(TTSettingSwitch *)switchView
 {
-    [QSDefaults setBool:switchView.isOn forKey:@"column"];
-    [QSDefaults synchronize];
+    [[QSOptions sharedConfig] setColumn:switchView.isOn];
 }
 
 

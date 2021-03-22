@@ -52,12 +52,13 @@
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    //移除系列
     return 4;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 49;
+    return 47;
 }
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
@@ -75,7 +76,7 @@
     cell.tt_DetailLabel.textColorThemeKey = @"Text3";
 
     if (indexPath.section == 0)
-    {
+    {//移除系列
         cell.tt_titleLabel.textColor = [UIColor systemBlueColor];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
@@ -96,6 +97,13 @@
     return cell;
 }
 
+// - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+// {
+//     if (section == 0)
+//         return @"移除系列";
+    
+//     return nil;
+// }
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -125,7 +133,7 @@
 - (void)myrepo
 {
     [[UIApplication sharedApplication] openURL:
-        [NSURL URLWithString:@"https://wstclzy2010.github.io/repo/"]
+        [NSURL URLWithString:@"https://apt.paigu.site"]
         options:@{}
         completionHandler:nil];
 }

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "QSNewSocialHeaders.h"
+#import "QSOptions.h"
 
 @interface RemoverViewController : UIViewController
 @end
